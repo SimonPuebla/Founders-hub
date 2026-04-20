@@ -1,77 +1,109 @@
 import Link from "next/link";
-import { TaskStatusBadge, PriorityIndicator } from "@/components/shared/StatusBadge";
+import { CheckSquare, AlertTriangle } from "lucide-react";
 import { formatDate, isOverdue } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import type { Task } from "@/types";
 
+const PRIORITY_DOT: Record<string, string> = {
+  critical: "bg-[#ef4444]",
+  high: "bg-[#f97316]",
+  medium: "bg-[#f59e0b]",
+  low: "bg-[#555555]",
+};
+
 interface TasksTodayWidgetProps {
   todayTasks: Task[];
-  blockedTasks: Task[];
   loading: boolean;
 }
 
-export function TasksTodayWidget({ todayTasks, blockedTasks, loading }: TasksTodayWidgetProps) {
-  const allTasks = [
-    ...blockedTasks,
-    ...todayTasks.filter((t) => t.status !== "blocked"),
-  ].slice(0, 8);
+export function TasksTodayWidget({ todayTasks, loading }: TasksTodayWidgetProps) {
+  const nonBlocked = todayTasks.filter((t) => t.status !== "blocked");
 
   return (
-    <div className="rounded border border-[#1e1e1e] bg-[#111111] px-4 py-3">
-      <div className="flex items-center justify-between mb-3">
+    <div className="rounded-lg border border-[#222222] bg-[#0f0f0f] p-5 flex flex-col">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">
-            Tasks
+          <CheckSquare className="w-3.5 h-3.5 text-[#22c55e]" />
+          <span className="text-xs font-semibold text-white uppercase tracking-wider">
+            Today&apos;s Tasks
           </span>
-          {blockedTasks.length > 0 && (
-            <span className="font-mono text-[10px] text-[#ef4444] bg-[#ef4444]/10 px-1.5 py-0.5 rounded status-blocked">
-              {blockedTasks.length} blocked
+          {nonBlocked.length > 0 && (
+            <span className="font-mono text-[10px] text-[#22c55e] bg-[#22c55e]/10 px-1.5 py-0.5 rounded">
+              {nonBlocked.length}
             </span>
           )}
         </div>
-        <Link href="/tasks?view=today" className="font-mono text-[10px] text-[#4a4a4a] hover:text-[#7c5cfc] transition-colors">
-          Ver todo →
+        <Link
+          href="/tasks?view=today"
+          className="font-mono text-[10px] text-[#555555] hover:text-white transition-colors"
+        >
+          All tasks →
         </Link>
       </div>
 
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-8 bg-[#1e1e1e] rounded animate-pulse" />
+            <div key={i} className="h-8 bg-[#1a1a1a] rounded animate-pulse" />
           ))}
         </div>
-      ) : allTasks.length === 0 ? (
-        <p className="font-mono text-[10px] text-[#4a4a4a] py-2">
-          No tasks for today.
-        </p>
+      ) : nonBlocked.length === 0 ? (
+        <div className="py-2 space-y-2">
+          <div className="flex items-center gap-2 text-[#f59e0b]">
+            <AlertTriangle className="w-4 h-4" />
+            <span className="text-sm font-medium">No tasks defined</span>
+          </div>
+          <p className="text-xs text-[#555555]">Execution is unclear — define what you will do today.</p>
+          <Link
+            href="/tasks"
+            className="inline-block font-mono text-xs text-[#7c5cfc] hover:text-white transition-colors border border-[#7c5cfc]/30 hover:border-[#7c5cfc] px-3 py-1.5 rounded"
+          >
+            + Add task →
+          </Link>
+        </div>
       ) : (
-        <div className="space-y-1">
-          {allTasks.map((task) => {
+        <div className="space-y-0.5">
+          {nonBlocked.slice(0, 7).map((task) => {
             const overdue = task.due_date && isOverdue(task.due_date);
+            const isInProgress = task.status === "doing" || task.status === "in_progress";
             return (
               <Link
                 key={task.id}
                 href="/tasks"
-                className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-[#1a1a1a] transition-colors group"
+                className="flex items-center gap-2.5 py-2 px-2 rounded hover:bg-[#1a1a1a] transition-colors group"
               >
-                <PriorityIndicator priority={task.priority} />
+                <span
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full shrink-0",
+                    PRIORITY_DOT[task.priority] || "bg-[#555555]"
+                  )}
+                />
                 <span
                   className={cn(
                     "text-xs flex-1 truncate",
-                    task.status === "blocked" ? "text-[#ef4444]" : "text-[#f0f0f0]"
+                    isInProgress ? "text-white font-medium" : "text-[#cccccc]"
                   )}
                 >
                   {task.title}
                 </span>
-                {task.due_date && overdue && (
+                {overdue && (
                   <span className="font-mono text-[10px] text-[#ef4444] shrink-0">
-                    {formatDate(task.due_date, "dd MMM")}
+                    {formatDate(task.due_date!, "dd MMM")}
                   </span>
                 )}
-                <TaskStatusBadge status={task.status} className="shrink-0" />
+                {isInProgress && (
+                  <span className="font-mono text-[10px] text-[#3b82f6] shrink-0 opacity-0 group-hover:opacity-100">
+                    in progress
+                  </span>
+                )}
               </Link>
             );
           })}
+          {nonBlocked.length > 7 && (
+            <p className="font-mono text-[10px] text-[#555555] px-2 pt-1">
+              +{nonBlocked.length - 7} more
+            </p>
+          )}
         </div>
       )}
     </div>
