@@ -123,7 +123,7 @@ export default function SettingsPage() {
           <div className="px-5 py-4 space-y-2">
             {[
               { key: "Supabase URL", value: process.env.NEXT_PUBLIC_SUPABASE_URL },
-              { key: "Google OAuth", value: process.env.GOOGLE_CLIENT_ID ? "Configured" : "Not configured" },
+              { key: "Google OAuth", value: process.env.NEXT_PUBLIC_SUPABASE_URL ? "Credentials loaded" : "Not configured" },
             ].map(({ key, value }) => (
               <div key={key} className="flex items-center justify-between">
                 <span className="font-mono text-xs text-[#4a4a4a]">{key}</span>

@@ -187,7 +187,7 @@ export function InputDetailPanel({ input, onClose, onEdit, onRefresh }: InputDet
 
       {showTaskForm && (
         <TaskForm
-          task={selectedText ? { id: "", title: selectedText, status: "todo", priority: "medium", progress: 0, input_id: input.id, created_at: "", updated_at: "" } : undefined}
+          task={selectedText ? { id: "", title: selectedText, status: "todo", priority: "medium", progress: 0, input_id: input.id, okr_id: undefined, created_at: "", updated_at: "" } : undefined}
           onClose={() => { setShowTaskForm(false); setSelectedText(""); toast({ title: "Task created" }); onRefresh(); }}
         />
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface Toast {
   id: string;
@@ -36,10 +36,9 @@ export function useToast() {
     };
   }, []);
 
-  useState(() => {
-    const unsub = subscribe(setToasts);
-    return unsub;
-  });
+  useEffect(() => {
+    return subscribe(setToasts);
+  }, [subscribe]);
 
   const dismiss = useCallback((id: string) => {
     toastState = toastState.filter((t) => t.id !== id);
