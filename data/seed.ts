@@ -1,0 +1,172 @@
+import type { OKRStatus, OpportunityType, OpportunityUrgency, PersonRelationship } from "@/types";
+
+export const SEED_OKRS = [
+  {
+    title: "Cerrar ronda seed",
+    description: "Levantar capital seed para financiar el equipo y el desarrollo de v1 del DEZ",
+    quarter: "Q2 2025",
+    status: "on_track" as OKRStatus,
+    progress: 35,
+    owner: "Simo",
+    deadline: "2025-06-30",
+  },
+  {
+    title: "DEZ v1 live en Argentina",
+    description: "Lanzar la primera versión funcional de la plataforma Andén en al menos una provincia",
+    quarter: "Q2 2025",
+    status: "on_track" as OKRStatus,
+    progress: 25,
+    owner: "Santiago",
+    deadline: "2025-06-30",
+  },
+  {
+    title: "Partnerships institucionales activos",
+    description: "Firmar acuerdos con al menos dos provincias o entidades gubernamentales",
+    quarter: "Q2 2025",
+    status: "at_risk" as OKRStatus,
+    progress: 20,
+    owner: "Teófilo",
+    deadline: "2025-06-30",
+  },
+  {
+    title: "Pipeline de 20 startups validadas",
+    description: "Identificar y calificar 20 startups candidatas para operar bajo Andén",
+    quarter: "Q2 2025",
+    status: "on_track" as OKRStatus,
+    progress: 40,
+    owner: "Simo",
+    deadline: "2025-06-30",
+  },
+  {
+    title: "tKYA framework lanzado",
+    description: "Publicar tKYA como estándar de certificación para agentes IA en DSEZs",
+    quarter: "Q2 2025",
+    status: "paused" as OKRStatus,
+    progress: 60,
+    owner: "Simo",
+    deadline: "2025-07-31",
+  },
+];
+
+export const SEED_KPIS = [
+  { okr_title: "Cerrar ronda seed", title: "Capital comprometido", current_value: 0, target_value: 1500000, unit: "USD", frequency: "weekly" },
+  { okr_title: "Cerrar ronda seed", title: "Reuniones con inversores activos", current_value: 4, target_value: 20, unit: "reuniones", frequency: "weekly" },
+  { okr_title: "DEZ v1 live en Argentina", title: "Módulos de plataforma completados", current_value: 2, target_value: 6, unit: "módulos", frequency: "weekly" },
+  { okr_title: "Partnerships institucionales activos", title: "Provincias en negociación activa", current_value: 2, target_value: 4, unit: "provincias", frequency: "monthly" },
+  { okr_title: "Pipeline de 20 startups validadas", title: "Startups en pipeline calificado", current_value: 8, target_value: 20, unit: "startups", frequency: "weekly" },
+];
+
+export const SEED_PEOPLE = [
+  { name: "Teófilo Beato", role: "Chief Public Affairs", organization: "Andén", relationship: "team" as PersonRelationship },
+  { name: "Milagros Santamaría", role: "Chief of Staff", organization: "Andén", relationship: "team" as PersonRelationship },
+  { name: "Santiago Bermúdez", role: "Executive Director", organization: "Andén", relationship: "team" as PersonRelationship },
+  { name: "Juan Benet", role: "Founder", organization: "Protocol Labs", relationship: "investor" as PersonRelationship, notes: "Board member y lead investor" },
+];
+
+export const SEED_TASKS = [
+  {
+    title: "Preparar deck para próxima reunión con inversores",
+    status: "doing" as const,
+    priority: "critical" as const,
+    project: "Fundraising",
+    owner: "Simo",
+    due_date: "2025-04-25",
+  },
+  {
+    title: "Follow-up con Juan Benet sobre timeline de ronda",
+    status: "waiting" as const,
+    priority: "high" as const,
+    project: "Fundraising",
+    owner: "Simo",
+    due_date: "2025-04-22",
+  },
+  {
+    title: "Definir roadmap producto Q2",
+    status: "todo" as const,
+    priority: "high" as const,
+    project: "Producto / Plataforma",
+    owner: "Santiago",
+    due_date: "2025-04-30",
+  },
+  {
+    title: "Reunión con Gobierno de Río Negro — confirmar agenda",
+    status: "blocked" as const,
+    priority: "critical" as const,
+    project: "Río Negro",
+    owner: "Teófilo",
+    context_note: "Bloqueado por disponibilidad del Ministro",
+  },
+  {
+    title: "Onboarding 3 nuevas startups al pipeline",
+    status: "doing" as const,
+    priority: "medium" as const,
+    project: "Startup Pipeline",
+    owner: "Simo",
+  },
+  {
+    title: "Publicar post sobre DEZs en LinkedIn",
+    status: "todo" as const,
+    priority: "low" as const,
+    project: "Marca Personal",
+    owner: "Simo",
+    due_date: "2025-04-28",
+  },
+  {
+    title: "Revisar contrato con Chainlink / ACE",
+    status: "waiting" as const,
+    priority: "medium" as const,
+    project: "Chainlink / ACE",
+    owner: "Simo",
+  },
+  {
+    title: "Actualizar modelo financiero con nuevas proyecciones",
+    status: "todo" as const,
+    priority: "high" as const,
+    project: "Fundraising",
+    owner: "Milagros",
+    due_date: "2025-04-24",
+  },
+];
+
+export const SEED_OPPORTUNITIES = [
+  {
+    title: "VC fondo LatAm con tesis en RegTech",
+    type: "investor" as OpportunityType,
+    person: "—",
+    entity: "Fondo LatAm",
+    urgency: "this_month" as OpportunityUrgency,
+    status: "reviewing" as const,
+    origin: "Intro via LinkedIn",
+    okr_title: "Cerrar ronda seed",
+  },
+  {
+    title: "Provincia de Mendoza — interés en DEZ piloto",
+    type: "gov_contact" as OpportunityType,
+    person: "Ministro Economía Mendoza",
+    entity: "Gobierno Mendoza",
+    urgency: "this_quarter" as OpportunityUrgency,
+    status: "active" as const,
+    origin: "Referido por Teófilo",
+    okr_title: "Partnerships institucionales activos",
+  },
+  {
+    title: "Startup fintech — candidata ideal para DEZ",
+    type: "startup" as OpportunityType,
+    person: "CEO startup",
+    entity: "FinTech LATAM",
+    urgency: "this_quarter" as OpportunityUrgency,
+    status: "captured" as const,
+    origin: "Demo day Buenos Aires",
+    okr_title: "Pipeline de 20 startups validadas",
+  },
+  {
+    title: "Protocol Labs — potencial partner técnico para tKYA",
+    type: "institutional_partner" as OpportunityType,
+    person: "Juan Benet",
+    entity: "Protocol Labs",
+    urgency: "this_quarter" as OpportunityUrgency,
+    status: "mapped" as const,
+    origin: "Relación existente",
+    okr_title: "tKYA framework lanzado",
+  },
+];
