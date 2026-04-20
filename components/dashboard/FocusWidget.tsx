@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Target, AlertTriangle, Plus, X, Check } from "lucide-react";
+import { Plus, X, Check } from "lucide-react";
+import Link from "next/link";
 
 export function FocusWidget() {
   const [priorities, setPriorities] = useState<string[]>([]);
@@ -57,55 +58,44 @@ export function FocusWidget() {
   }
 
   return (
-    <div className="rounded-lg border border-[#222222] bg-[#0f0f0f] p-5 flex flex-col min-h-[200px]">
+    <div className="bg-white border border-[#E6E8EB] rounded-lg p-5 flex flex-col min-h-[196px]">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Target className="w-3.5 h-3.5 text-[#7c5cfc]" />
-          <span className="text-xs font-semibold text-white uppercase tracking-wider">
-            Today&apos;s Focus
-          </span>
-        </div>
+        <span className="text-sm font-medium text-[#111827]">Today&apos;s Focus</span>
         {priorities.length < 5 && !adding && !loading && (
           <button
             onClick={() => setAdding(true)}
-            className="text-[#555555] hover:text-white transition-colors"
+            className="text-[#9CA3AF] hover:text-[#2563EB] transition-colors"
+            title="Add priority"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
           </button>
         )}
       </div>
 
       {loading ? (
-        <div className="space-y-2 flex-1">
+        <div className="space-y-2.5 flex-1">
           {[1, 2].map((i) => (
-            <div key={i} className="h-6 bg-[#1a1a1a] rounded animate-pulse" />
+            <div key={i} className="h-5 bg-[#F3F4F6] rounded animate-pulse" />
           ))}
         </div>
       ) : priorities.length === 0 && !adding ? (
-        <div className="flex-1 flex flex-col items-start justify-center gap-3">
-          <div className="flex items-center gap-2 text-[#f59e0b]">
-            <AlertTriangle className="w-4 h-4" />
-            <span className="text-sm font-semibold">No focus defined</span>
-          </div>
-          <p className="text-xs text-[#666666] leading-relaxed">
-            You are operating without direction.
-            <br />
-            Define your top 3 priorities now.
+        <div className="flex-1 flex flex-col justify-center gap-2">
+          <p className="text-sm font-medium text-[#D97706]">No focus defined</p>
+          <p className="text-sm text-[#6B7280]">
+            You are operating without direction — set your top priorities.
           </p>
           <button
             onClick={() => setAdding(true)}
-            className="text-xs font-mono text-[#7c5cfc] hover:text-white transition-colors border border-[#7c5cfc]/30 hover:border-[#7c5cfc] px-3 py-1.5 rounded"
+            className="mt-1 text-sm text-[#2563EB] hover:underline text-left font-medium"
           >
-            + Add priority →
+            Set priorities →
           </button>
         </div>
       ) : (
-        <div className="flex-1 space-y-2.5">
+        <div className="flex-1 space-y-2">
           {priorities.map((p, i) => (
             <div key={i} className="group flex items-center gap-2">
-              <span className="font-mono text-[10px] text-[#7c5cfc] w-4 shrink-0 mt-0.5">
-                {i + 1}.
-              </span>
+              <span className="text-xs font-medium text-[#9CA3AF] w-4 shrink-0">{i + 1}.</span>
               {editing === i ? (
                 <div className="flex-1 flex items-center gap-1.5">
                   <input
@@ -116,19 +106,19 @@ export function FocusWidget() {
                       if (e.key === "Escape") setEditing(null);
                     }}
                     autoFocus
-                    className="flex-1 bg-[#1a1a1a] border border-[#7c5cfc]/50 rounded px-2 py-1 text-xs text-white outline-none"
+                    className="flex-1 border border-[#2563EB] rounded-md px-2 py-1 text-sm text-[#111827] outline-none bg-white"
                   />
-                  <button onClick={() => updateItem(i)} className="text-[#22c55e] hover:text-[#16a34a]">
-                    <Check className="w-3 h-3" />
+                  <button onClick={() => updateItem(i)} className="text-[#16A34A]">
+                    <Check className="w-3.5 h-3.5" />
                   </button>
-                  <button onClick={() => setEditing(null)} className="text-[#555555]">
-                    <X className="w-3 h-3" />
+                  <button onClick={() => setEditing(null)} className="text-[#9CA3AF]">
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               ) : (
                 <>
                   <span
-                    className="flex-1 text-sm text-white cursor-pointer hover:text-[#a0a0a0] transition-colors leading-snug"
+                    className="flex-1 text-sm text-[#111827] cursor-pointer hover:text-[#6B7280] transition-colors leading-snug"
                     onClick={() => {
                       setDraft(p);
                       setEditing(i);
@@ -138,9 +128,9 @@ export function FocusWidget() {
                   </span>
                   <button
                     onClick={() => removeItem(i)}
-                    className="opacity-0 group-hover:opacity-100 text-[#555555] hover:text-[#ef4444] transition-all shrink-0"
+                    className="opacity-0 group-hover:opacity-100 text-[#D1D5DB] hover:text-[#DC2626] transition-all shrink-0"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </>
               )}
@@ -148,8 +138,8 @@ export function FocusWidget() {
           ))}
 
           {adding && (
-            <div className="flex items-center gap-2 mt-1">
-              <span className="font-mono text-[10px] text-[#7c5cfc] w-4 shrink-0">
+            <div className="flex items-center gap-2 pt-1">
+              <span className="text-xs font-medium text-[#9CA3AF] w-4 shrink-0">
                 {priorities.length + 1}.
               </span>
               <input
@@ -164,19 +154,19 @@ export function FocusWidget() {
                 }}
                 autoFocus
                 placeholder="New priority..."
-                className="flex-1 bg-[#1a1a1a] border border-[#7c5cfc]/50 rounded px-2 py-1 text-xs text-white placeholder-[#333333] outline-none"
+                className="flex-1 border border-[#2563EB] rounded-md px-2 py-1 text-sm text-[#111827] placeholder-[#D1D5DB] outline-none bg-white"
               />
-              <button onClick={addItem} className="text-[#22c55e]">
-                <Check className="w-3 h-3" />
+              <button onClick={addItem} className="text-[#16A34A]">
+                <Check className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => {
                   setAdding(false);
                   setNewItem("");
                 }}
-                className="text-[#555555]"
+                className="text-[#9CA3AF]"
               >
-                <X className="w-3 h-3" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           )}

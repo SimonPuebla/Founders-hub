@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { CheckSquare, AlertTriangle } from "lucide-react";
 import { formatDate, isOverdue } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import type { Task } from "@/types";
 
-const PRIORITY_DOT: Record<string, string> = {
-  critical: "bg-[#ef4444]",
-  high: "bg-[#f97316]",
-  medium: "bg-[#f59e0b]",
-  low: "bg-[#555555]",
+const PRIORITY_COLORS: Record<string, string> = {
+  critical: "bg-[#DC2626]",
+  high: "bg-[#EA580C]",
+  medium: "bg-[#D97706]",
+  low: "bg-[#9CA3AF]",
 };
 
 interface TasksTodayWidgetProps {
@@ -17,92 +16,86 @@ interface TasksTodayWidgetProps {
 }
 
 export function TasksTodayWidget({ todayTasks, loading }: TasksTodayWidgetProps) {
-  const nonBlocked = todayTasks.filter((t) => t.status !== "blocked");
+  const visible = todayTasks.filter((t) => t.status !== "blocked").slice(0, 5);
 
   return (
-    <div className="rounded-lg border border-[#222222] bg-[#0f0f0f] p-5 flex flex-col">
+    <div className="bg-white border border-[#E6E8EB] rounded-lg p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <CheckSquare className="w-3.5 h-3.5 text-[#22c55e]" />
-          <span className="text-xs font-semibold text-white uppercase tracking-wider">
-            Today&apos;s Tasks
-          </span>
-          {nonBlocked.length > 0 && (
-            <span className="font-mono text-[10px] text-[#22c55e] bg-[#22c55e]/10 px-1.5 py-0.5 rounded">
-              {nonBlocked.length}
+          <span className="text-sm font-medium text-[#111827]">Today&apos;s Tasks</span>
+          {visible.length > 0 && (
+            <span className="text-xs font-medium text-[#16A34A] bg-[#F0FDF4] px-2 py-0.5 rounded-full">
+              {visible.length}
             </span>
           )}
         </div>
-        <Link
-          href="/tasks?view=today"
-          className="font-mono text-[10px] text-[#555555] hover:text-white transition-colors"
-        >
+        <Link href="/tasks?view=today" className="text-xs text-[#6B7280] hover:text-[#2563EB] transition-colors">
           All tasks →
         </Link>
       </div>
 
       {loading ? (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-8 bg-[#1a1a1a] rounded animate-pulse" />
+            <div key={i} className="h-8 bg-[#F3F4F6] rounded animate-pulse" />
           ))}
         </div>
-      ) : nonBlocked.length === 0 ? (
-        <div className="py-2 space-y-2">
-          <div className="flex items-center gap-2 text-[#f59e0b]">
-            <AlertTriangle className="w-4 h-4" />
-            <span className="text-sm font-medium">No tasks defined</span>
-          </div>
-          <p className="text-xs text-[#555555]">Execution is unclear — define what you will do today.</p>
+      ) : visible.length === 0 ? (
+        <div className="py-2">
+          <p className="text-sm font-medium text-[#D97706]">No tasks defined</p>
+          <p className="text-sm text-[#6B7280] mt-1">Define today&apos;s execution.</p>
           <Link
             href="/tasks"
-            className="inline-block font-mono text-xs text-[#7c5cfc] hover:text-white transition-colors border border-[#7c5cfc]/30 hover:border-[#7c5cfc] px-3 py-1.5 rounded"
+            className="mt-2 inline-block text-sm font-medium text-[#2563EB] hover:underline"
           >
-            + Add task →
+            Add task →
           </Link>
         </div>
       ) : (
-        <div className="space-y-0.5">
-          {nonBlocked.slice(0, 7).map((task) => {
+        <div className="space-y-1">
+          {visible.map((task) => {
             const overdue = task.due_date && isOverdue(task.due_date);
-            const isInProgress = task.status === "doing" || task.status === "in_progress";
+            const isActive = task.status === "doing" || (task.status as string) === "in_progress";
             return (
               <Link
                 key={task.id}
                 href="/tasks"
-                className="flex items-center gap-2.5 py-2 px-2 rounded hover:bg-[#1a1a1a] transition-colors group"
+                className="flex items-center gap-3 py-2 px-2 -mx-2 rounded-md hover:bg-[#F9FAFB] transition-colors group"
               >
                 <span
                   className={cn(
                     "w-1.5 h-1.5 rounded-full shrink-0",
-                    PRIORITY_DOT[task.priority] || "bg-[#555555]"
+                    PRIORITY_COLORS[task.priority] || "bg-[#9CA3AF]"
                   )}
                 />
                 <span
                   className={cn(
-                    "text-xs flex-1 truncate",
-                    isInProgress ? "text-white font-medium" : "text-[#cccccc]"
+                    "text-sm flex-1 truncate",
+                    isActive ? "text-[#111827] font-medium" : "text-[#374151]"
                   )}
                 >
                   {task.title}
                 </span>
                 {overdue && (
-                  <span className="font-mono text-[10px] text-[#ef4444] shrink-0">
+                  <span className="text-xs font-medium text-[#DC2626] shrink-0">
                     {formatDate(task.due_date!, "dd MMM")}
                   </span>
                 )}
-                {isInProgress && (
-                  <span className="font-mono text-[10px] text-[#3b82f6] shrink-0 opacity-0 group-hover:opacity-100">
-                    in progress
+                {isActive && (
+                  <span className="text-xs text-[#2563EB] bg-[#EFF6FF] px-1.5 py-0.5 rounded shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    active
                   </span>
                 )}
               </Link>
             );
           })}
-          {nonBlocked.length > 7 && (
-            <p className="font-mono text-[10px] text-[#555555] px-2 pt-1">
-              +{nonBlocked.length - 7} more
-            </p>
+          {todayTasks.filter((t) => t.status !== "blocked").length > 5 && (
+            <Link
+              href="/tasks"
+              className="block text-xs text-[#6B7280] hover:text-[#2563EB] pt-1 px-2 -mx-2"
+            >
+              +{todayTasks.filter((t) => t.status !== "blocked").length - 5} more →
+            </Link>
           )}
         </div>
       )}

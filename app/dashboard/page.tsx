@@ -118,37 +118,34 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="h-full overflow-y-auto bg-[#080808]">
+    <div className="h-full overflow-y-auto bg-[#F7F7F8]">
       {/* Header */}
-      <div className="px-8 pt-6 pb-4 border-b border-[#181818]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-baseline gap-3">
-            <h1 className="text-xl font-bold text-white capitalize">
+      <div className="bg-white border-b border-[#E6E8EB] px-8 py-4">
+        <div className="max-w-[1280px] mx-auto flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-semibold text-[#111827] capitalize">
               {format(today, "EEEE d", { locale: es })}
             </h1>
-            <span className="font-mono text-xs text-[#444444] capitalize">
+            <p className="text-sm text-[#6B7280] capitalize">
               {format(today, "MMMM yyyy", { locale: es })}
-            </span>
+            </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {blockedTasks.length > 0 && (
-              <span className="font-mono text-xs text-[#ef4444] bg-[#ef4444]/10 border border-[#ef4444]/20 px-2.5 py-1 rounded">
-                ⚠ {blockedTasks.length} blocked
+              <span className="text-xs font-medium text-[#DC2626] bg-[#FEF2F2] border border-[#FECACA] px-2.5 py-1 rounded-md">
+                {blockedTasks.length} blocked
               </span>
             )}
             {inputs.length > 0 && (
-              <span className="font-mono text-xs text-[#f59e0b] bg-[#f59e0b]/10 border border-[#f59e0b]/20 px-2.5 py-1 rounded">
+              <span className="text-xs font-medium text-[#D97706] bg-[#FFFBEB] border border-[#FDE68A] px-2.5 py-1 rounded-md">
                 {inputs.length} to process
               </span>
             )}
-            <span className="font-mono text-xs text-[#444444]">
-              {format(today, "HH:mm")}
-            </span>
           </div>
         </div>
       </div>
 
-      <div className="px-8 py-6 space-y-5">
+      <div className="max-w-[1280px] mx-auto px-8 py-6 space-y-5">
         {/* TOP ROW: Focus | Pulse | Voice */}
         <div className="grid grid-cols-3 gap-4">
           <FocusWidget />
@@ -164,9 +161,8 @@ export default function DashboardPage() {
 
         {/* MAIN + SIDEBAR */}
         <div className="grid grid-cols-3 gap-4">
-          {/* Main content (2/3) */}
+          {/* Main (2 cols) */}
           <div className="col-span-2 space-y-4">
-            {/* Tasks + Blocked */}
             <div className="grid grid-cols-2 gap-4">
               <TasksTodayWidget todayTasks={todayTasks} loading={loading} />
               <BlockedRisksWidget
@@ -177,20 +173,17 @@ export default function DashboardPage() {
               />
             </div>
 
-            {/* Active Opportunities */}
             <OppsWidget opps={opps} okrs={okrs} loading={loading} />
 
-            {/* Calendar */}
             <CalendarWidget events={calendarEvents} loading={loading} />
 
-            {/* Activity + Parked */}
             <div className="grid grid-cols-2 gap-4">
               <ActivityFeedWidget inputs={recentInputs} loading={loading} />
               <ParkedOppsWidget opps={parkedOpps} loading={loading} />
             </div>
           </div>
 
-          {/* Right Sidebar (1/3) */}
+          {/* Right Sidebar */}
           <div className="space-y-4">
             <FundraisingWidget okr={seedOKR} kpi={seedKPI} loading={loading} />
             <OKRWidget okrs={okrs} tasks={tasks} loading={loading} />

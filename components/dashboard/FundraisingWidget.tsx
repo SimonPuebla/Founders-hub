@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import type { OKR, KPI } from "@/types";
 
@@ -15,45 +14,34 @@ export function FundraisingWidget({ okr, kpi, loading }: FundraisingWidgetProps)
   const pct = Math.min(100, Math.round((current / target) * 100));
 
   const barColor =
-    pct >= 60 ? "bg-[#22c55e]" : pct >= 30 ? "bg-[#7c5cfc]" : "bg-[#f59e0b]";
+    pct >= 60 ? "bg-[#16A34A]" : pct >= 30 ? "bg-[#2563EB]" : "bg-[#D97706]";
   const pctColor =
-    pct >= 60 ? "text-[#22c55e]" : pct >= 30 ? "text-[#7c5cfc]" : "text-[#f59e0b]";
+    pct >= 60 ? "text-[#16A34A]" : pct >= 30 ? "text-[#2563EB]" : "text-[#D97706]";
 
   return (
-    <div className="rounded-lg border border-[#2a2a2a] bg-[#0f0f0f] p-5">
+    <div className="bg-white border border-[#E6E8EB] rounded-lg p-5">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-3.5 h-3.5 text-[#22c55e]" />
-          <span className="text-xs font-semibold text-white uppercase tracking-wider">
-            Seed Round
-          </span>
-        </div>
-        <Link
-          href="/strategy"
-          className="font-mono text-[10px] text-[#555555] hover:text-white transition-colors"
-        >
+        <span className="text-sm font-medium text-[#111827]">Seed Round</span>
+        <Link href="/strategy" className="text-xs text-[#6B7280] hover:text-[#2563EB] transition-colors">
           Details →
         </Link>
       </div>
 
       {loading ? (
-        <div className="h-16 bg-[#1a1a1a] rounded animate-pulse" />
+        <div className="h-20 bg-[#F3F4F6] rounded animate-pulse" />
       ) : (
         <>
-          <div className="flex items-baseline gap-2 mb-3">
-            <span className="font-mono text-2xl font-bold text-white">
-              {formatCurrency(current)}
-            </span>
+          <div className="mb-1">
+            <span className="text-3xl font-bold text-[#111827]">{formatCurrency(current)}</span>
           </div>
+          <p className="text-xs text-[#9CA3AF] mb-3">of {formatCurrency(target)} target</p>
 
-          <div className="mb-2">
+          <div className="mb-1.5">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="font-mono text-[10px] text-[#555555]">
-                Target: {formatCurrency(target)}
-              </span>
-              <span className={`font-mono text-sm font-bold ${pctColor}`}>{pct}%</span>
+              <span className="text-xs text-[#6B7280]">Committed</span>
+              <span className={`text-sm font-bold ${pctColor}`}>{pct}%</span>
             </div>
-            <div className="h-2 bg-[#1a1a1a] rounded-full overflow-hidden">
+            <div className="h-2 bg-[#F3F4F6] rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${barColor}`}
                 style={{ width: `${pct}%` }}
@@ -61,18 +49,18 @@ export function FundraisingWidget({ okr, kpi, loading }: FundraisingWidgetProps)
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-1">
-            <span className="font-mono text-[10px] text-[#555555]">
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-xs text-[#9CA3AF]">
               {formatCurrency(target - current)} remaining
             </span>
             {okr && (
               <span
-                className={`font-mono text-[10px] px-1.5 py-0.5 rounded ${
+                className={`text-xs font-medium px-1.5 py-0.5 rounded ${
                   okr.status === "on_track"
-                    ? "text-[#22c55e] bg-[#22c55e]/10"
+                    ? "text-[#16A34A] bg-[#F0FDF4]"
                     : okr.status === "at_risk"
-                    ? "text-[#f59e0b] bg-[#f59e0b]/10"
-                    : "text-[#ef4444] bg-[#ef4444]/10"
+                    ? "text-[#D97706] bg-[#FFFBEB]"
+                    : "text-[#DC2626] bg-[#FEF2F2]"
                 }`}
               >
                 {okr.status.replace("_", " ")}

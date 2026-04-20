@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Activity, TrendingUp } from "lucide-react";
 
 interface ExecutionPulseWidgetProps {
   inProgress: number;
@@ -9,46 +8,33 @@ interface ExecutionPulseWidgetProps {
   loading: boolean;
 }
 
-function PulseRow({
+function Stat({
   label,
   value,
-  bar,
+  sub,
   color,
 }: {
   label: string;
   value: string | number;
-  bar?: number;
-  color: "green" | "red" | "yellow" | "blue" | "muted";
+  sub?: string;
+  color?: "red" | "green" | "yellow" | "blue" | "gray";
 }) {
-  const textColors = {
-    green: "text-[#22c55e]",
-    red: "text-[#ef4444]",
-    yellow: "text-[#f59e0b]",
-    blue: "text-[#3b82f6]",
-    muted: "text-[#888888]",
+  const valueColors = {
+    red: "text-[#DC2626]",
+    green: "text-[#16A34A]",
+    yellow: "text-[#D97706]",
+    blue: "text-[#2563EB]",
+    gray: "text-[#6B7280]",
   };
-  const barColors = {
-    green: "bg-[#22c55e]",
-    red: "bg-[#ef4444]",
-    yellow: "bg-[#f59e0b]",
-    blue: "bg-[#3b82f6]",
-    muted: "bg-[#444444]",
-  };
+  const col = color ? valueColors[color] : "text-[#111827]";
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-[#888888]">{label}</span>
-        <span className={`font-mono text-sm font-semibold ${textColors[color]}`}>{value}</span>
+      <p className="text-xs text-[#6B7280] mb-1">{label}</p>
+      <div className="flex items-baseline gap-1.5">
+        <span className={`text-2xl font-bold ${col}`}>{value}</span>
+        {sub && <span className="text-xs text-[#9CA3AF]">{sub}</span>}
       </div>
-      {bar !== undefined && (
-        <div className="h-0.5 bg-[#1a1a1a] rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all ${barColors[color]}`}
-            style={{ width: `${Math.min(100, bar)}%` }}
-          />
-        </div>
-      )}
     </div>
   );
 }
@@ -61,66 +47,67 @@ export function ExecutionPulseWidget({
   loading,
 }: ExecutionPulseWidgetProps) {
   return (
-    <div className="rounded-lg border border-[#222222] bg-[#0f0f0f] p-5 flex flex-col min-h-[200px]">
+    <div className="bg-white border border-[#E6E8EB] rounded-lg p-5 flex flex-col min-h-[196px]">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Activity className="w-3.5 h-3.5 text-[#3b82f6]" />
-          <span className="text-xs font-semibold text-white uppercase tracking-wider">
-            Execution Pulse
-          </span>
-        </div>
-        <Link
-          href="/tasks"
-          className="font-mono text-[10px] text-[#555555] hover:text-white transition-colors"
-        >
-          All tasks →
+        <span className="text-sm font-medium text-[#111827]">Execution Pulse</span>
+        <Link href="/tasks" className="text-xs text-[#6B7280] hover:text-[#2563EB] transition-colors">
+          View all →
         </Link>
       </div>
 
       {loading ? (
-        <div className="space-y-3 flex-1">
+        <div className="grid grid-cols-2 gap-4 flex-1">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-7 bg-[#1a1a1a] rounded animate-pulse" />
+            <div key={i} className="h-12 bg-[#F3F4F6] rounded animate-pulse" />
           ))}
         </div>
       ) : (
-        <div className="flex-1 space-y-4">
-          <PulseRow
+        <div className="grid grid-cols-2 gap-x-6 gap-y-4 flex-1">
+          <Stat
             label="In progress"
             value={inProgress}
-            color={inProgress > 0 ? "blue" : "muted"}
+            color={inProgress > 0 ? "blue" : "gray"}
           />
-          <PulseRow
+          <Stat
             label="Blocked"
             value={blocked}
             color={blocked > 0 ? "red" : "green"}
           />
-          <PulseRow
-            label="Done this week"
-            value={`${completedPct}%`}
-            bar={completedPct}
-            color={completedPct >= 60 ? "green" : completedPct >= 30 ? "yellow" : "red"}
-          />
-          <PulseRow
-            label="Delegated / waiting"
+          <div>
+            <p className="text-xs text-[#6B7280] mb-1">Done this week</p>
+            <div className="flex items-baseline gap-1.5 mb-1.5">
+              <span
+                className={`text-2xl font-bold ${
+                  completedPct >= 60
+                    ? "text-[#16A34A]"
+                    : completedPct >= 30
+                    ? "text-[#D97706]"
+                    : "text-[#DC2626]"
+                }`}
+              >
+                {completedPct}%
+              </span>
+            </div>
+            <div className="h-1 bg-[#F3F4F6] rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  completedPct >= 60
+                    ? "bg-[#16A34A]"
+                    : completedPct >= 30
+                    ? "bg-[#D97706]"
+                    : "bg-[#DC2626]"
+                }`}
+                style={{ width: `${completedPct}%` }}
+              />
+            </div>
+          </div>
+          <Stat
+            label="Delegated"
             value={delegated}
-            color="muted"
+            color="gray"
           />
         </div>
       )}
-
-      <div className="mt-4 pt-3 border-t border-[#1a1a1a]">
-        <div className="flex items-center gap-1.5">
-          <TrendingUp className="w-3 h-3 text-[#555555]" />
-          <span className="font-mono text-[10px] text-[#555555]">
-            {inProgress === 0 && blocked === 0
-              ? "No active execution — start something"
-              : blocked > inProgress
-              ? "More blocked than in progress — unblock first"
-              : "Execution flowing"}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

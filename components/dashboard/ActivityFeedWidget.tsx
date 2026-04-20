@@ -1,26 +1,15 @@
 import Link from "next/link";
-import { Zap, Mic, FileText, Lightbulb, Calendar } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import type { Input } from "@/types";
 
-const TYPE_ICONS: Record<string, React.ElementType> = {
-  meeting: Calendar,
-  voice_note: Mic,
-  quick_idea: Lightbulb,
-  transcript: FileText,
-  note: FileText,
-  day_update: Zap,
-  weekly_recap: Zap,
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  meeting: "text-[#3b82f6]",
-  voice_note: "text-[#f97316]",
-  quick_idea: "text-[#22c55e]",
-  transcript: "text-[#7c5cfc]",
-  note: "text-[#888888]",
-  day_update: "text-[#f59e0b]",
-  weekly_recap: "text-[#ef4444]",
+const TYPE_COLORS: Record<string, { dot: string; label: string }> = {
+  meeting: { dot: "bg-[#2563EB]", label: "Meeting" },
+  voice_note: { dot: "bg-[#EA580C]", label: "Voice note" },
+  quick_idea: { dot: "bg-[#16A34A]", label: "Idea" },
+  transcript: { dot: "bg-[#7C3AED]", label: "Transcript" },
+  note: { dot: "bg-[#6B7280]", label: "Note" },
+  day_update: { dot: "bg-[#D97706]", label: "Update" },
+  weekly_recap: { dot: "bg-[#DC2626]", label: "Recap" },
 };
 
 interface ActivityFeedWidgetProps {
@@ -30,49 +19,38 @@ interface ActivityFeedWidgetProps {
 
 export function ActivityFeedWidget({ inputs, loading }: ActivityFeedWidgetProps) {
   return (
-    <div className="rounded-lg border border-[#222222] bg-[#0f0f0f] p-5">
+    <div className="bg-white border border-[#E6E8EB] rounded-lg p-5">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Zap className="w-3.5 h-3.5 text-[#f59e0b]" />
-          <span className="text-xs font-semibold text-white uppercase tracking-wider">
-            Activity Feed
-          </span>
-        </div>
-        <Link
-          href="/inputs"
-          className="font-mono text-[10px] text-[#555555] hover:text-white transition-colors"
-        >
+        <span className="text-sm font-medium text-[#111827]">Activity Feed</span>
+        <Link href="/inputs" className="text-xs text-[#6B7280] hover:text-[#2563EB] transition-colors">
           All inputs →
         </Link>
       </div>
 
       {loading ? (
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-8 bg-[#1a1a1a] rounded animate-pulse" />
+            <div key={i} className="h-7 bg-[#F3F4F6] rounded animate-pulse" />
           ))}
         </div>
       ) : inputs.length === 0 ? (
-        <div className="py-2">
-          <p className="text-xs text-[#555555]">No recent activity</p>
-          <p className="font-mono text-[10px] text-[#444444] mt-1">
-            Capture meetings, ideas, and updates to see them here.
-          </p>
+        <div className="py-1">
+          <p className="text-sm text-[#6B7280]">No recent activity.</p>
+          <p className="text-sm text-[#9CA3AF] mt-0.5">Capture inputs to see activity here.</p>
         </div>
       ) : (
         <div className="space-y-0.5">
           {inputs.slice(0, 6).map((input) => {
-            const Icon = TYPE_ICONS[input.type] || FileText;
-            const color = TYPE_COLORS[input.type] || "text-[#888888]";
+            const cfg = TYPE_COLORS[input.type] || { dot: "bg-[#D1D5DB]", label: input.type };
             return (
               <Link
                 key={input.id}
                 href="/inputs"
-                className="flex items-center gap-2.5 py-2 px-2 rounded hover:bg-[#1a1a1a] transition-colors group"
+                className="flex items-center gap-3 py-2 px-2 -mx-2 rounded-md hover:bg-[#F9FAFB] transition-colors"
               >
-                <Icon className={`w-3 h-3 shrink-0 ${color}`} />
-                <span className="text-xs text-white truncate flex-1">{input.title}</span>
-                <span className="font-mono text-[10px] text-[#555555] shrink-0">
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${cfg.dot}`} />
+                <span className="text-sm text-[#374151] truncate flex-1">{input.title}</span>
+                <span className="text-xs text-[#9CA3AF] shrink-0">
                   {formatDate(input.date, "dd MMM")}
                 </span>
               </Link>
