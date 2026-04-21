@@ -20,15 +20,19 @@ export function Sidebar() {
   const counts = useSidebarCounts();
 
   return (
-    <aside className="w-[220px] h-screen flex flex-col bg-white border-r border-[#E6E8EB] shrink-0">
-      <div className="px-5 pt-6 pb-5 border-b border-[#E6E8EB]">
+    <aside
+      className="w-[200px] h-screen flex flex-col shrink-0"
+      style={{
+        background: "rgba(255,255,255,0.6)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderRight: "1px solid rgba(0,0,0,0.07)",
+      }}
+    >
+      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
         <Link href="/dashboard">
-          <h1 className="text-sm font-bold tracking-tight text-[#111827]">
-            ANDÉN
-          </h1>
-          <p className="text-xs text-[#9CA3AF] mt-0.5">
-            Founders Hub
-          </p>
+          <h1 className="text-sm font-bold tracking-tight text-[#111827]">ANDÉN</h1>
+          <p className="text-xs text-[#9CA3AF] mt-0.5">Founders Hub</p>
         </Link>
       </div>
 
@@ -43,17 +47,17 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors group",
+                "flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all",
                 isActive
-                  ? "bg-[#EFF6FF] text-[#2563EB]"
-                  : "text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6]"
+                  ? "bg-[#2563EB]/10 text-[#2563EB]"
+                  : "text-[#6B7280] hover:text-[#111827] hover:bg-black/5"
               )}
             >
               <div className="flex items-center gap-2.5">
                 <Icon
                   className={cn(
                     "w-4 h-4 shrink-0",
-                    isActive ? "text-[#2563EB]" : "text-[#9CA3AF] group-hover:text-[#6B7280]"
+                    isActive ? "text-[#2563EB]" : "text-[#9CA3AF]"
                   )}
                 />
                 <span className={cn("text-sm", isActive ? "font-medium" : "font-normal")}>
@@ -63,10 +67,10 @@ export function Sidebar() {
               {count > 0 && (
                 <span
                   className={cn(
-                    "text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center font-medium",
+                    "text-xs px-1.5 py-0.5 rounded-full font-medium",
                     item.countKey === "blocked_tasks"
                       ? "bg-[#FEF2F2] text-[#DC2626]"
-                      : "bg-[#F3F4F6] text-[#6B7280]"
+                      : "bg-black/6 text-[#6B7280]"
                   )}
                 >
                   {count}
@@ -77,18 +81,18 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-3 pb-5 border-t border-[#E6E8EB] pt-3">
+      <div className="px-3 pb-5 pt-3" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
         <Link
           href="/settings"
           className={cn(
-            "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
+            "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all",
             pathname === "/settings"
-              ? "bg-[#EFF6FF] text-[#2563EB]"
-              : "text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6]"
+              ? "bg-[#2563EB]/10 text-[#2563EB]"
+              : "text-[#6B7280] hover:text-[#111827] hover:bg-black/5"
           )}
         >
           <Settings className={cn("w-4 h-4 shrink-0", pathname === "/settings" ? "text-[#2563EB]" : "text-[#9CA3AF]")} />
-          <span className="text-sm">Settings</span>
+          <span>Settings</span>
         </Link>
       </div>
     </aside>

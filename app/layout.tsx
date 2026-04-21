@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased font-sans">
-        <div className="flex h-screen overflow-hidden bg-[#F7F7F8]">
+        <div className="flex h-screen overflow-hidden">
           <Sidebar />
           <main className="flex-1 overflow-y-auto">
             {children}
