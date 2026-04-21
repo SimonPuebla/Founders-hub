@@ -18,64 +18,71 @@ export function KPIFundraisingWidget({ okr, kpi, loading }: KPIFundraisingWidget
   const current = kpi?.current_value || 0;
   const target = kpi?.target_value || 1500000;
   const pct = Math.min(100, Math.round((current / target) * 100));
+  const barColor = pct >= 60 ? "var(--green)" : pct >= 30 ? "var(--blue)" : "var(--amber)";
 
   return (
     <div className="glass p-5">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm font-semibold text-[#111827]">KPI — Fundraising</p>
-        <Link href="/strategy" className="text-xs text-[#6B7280] hover:text-[#2563EB] transition-colors">
-          →
-        </Link>
+        <p className="text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>Fundraising</p>
+        <Link href="/strategy" className="text-[12px]" style={{ color: "var(--text-muted)" }}>→</Link>
       </div>
 
       {loading ? (
-        <div className="h-20 bg-black/5 rounded-lg animate-pulse" />
+        <div className="h-20 rounded-lg animate-pulse" style={{ background: "var(--bg)" }} />
       ) : (
         <>
           <div className="mb-3">
-            <span className="text-2xl font-bold text-[#111827]">{formatCurrency(current)}</span>
-            <div className="mt-1.5 h-1.5 bg-black/6 rounded-full overflow-hidden">
+            <span className="text-2xl font-bold tabular-nums" style={{ color: "var(--text-primary)" }}>
+              {formatCurrency(current)}
+            </span>
+            <div className="mt-1.5 h-1.5 rounded-full overflow-hidden" style={{ background: "var(--border)" }}>
               <div
-                className={`h-full rounded-full ${pct >= 60 ? "bg-[#16A34A]" : pct >= 30 ? "bg-[#2563EB]" : "bg-[#D97706]"}`}
-                style={{ width: `${pct}%` }}
+                className="h-full rounded-full transition-all"
+                style={{ width: `${pct}%`, background: barColor }}
               />
             </div>
             <div className="flex items-center justify-between mt-1">
-              <span className="text-xs text-[#9CA3AF]">{pct}% of {formatCurrency(target)}</span>
+              <span className="text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
+                {pct}% of {formatCurrency(target)}
+              </span>
               {okr && (
-                <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
-                  okr.status === "on_track" ? "text-[#16A34A] bg-green-50" :
-                  okr.status === "at_risk" ? "text-[#D97706] bg-amber-50" :
-                  "text-[#DC2626] bg-red-50"
-                }`}>
+                <span
+                  className="text-[11px] font-medium px-1.5 py-0.5 rounded"
+                  style={{
+                    color: okr.status === "on_track" ? "var(--green)" : okr.status === "at_risk" ? "var(--amber)" : "var(--red)",
+                    background: okr.status === "on_track" ? "var(--green-light)" : okr.status === "at_risk" ? "var(--amber-light)" : "var(--red-light)",
+                  }}
+                >
                   {okr.status.replace("_", " ")}
                 </span>
               )}
             </div>
           </div>
 
-          {/* Range scenarios */}
-          <div className="border-t border-black/6 pt-3 mt-3">
+          <div className="pt-3 mt-1" style={{ borderTop: "1px solid var(--border)" }}>
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D97706]" />
-              <p className="text-xs font-medium text-[#D97706]">Range undefined — choose one</p>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--amber)" }} />
+              <p className="text-[11px] font-medium" style={{ color: "var(--amber)" }}>Range undefined — choose one</p>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {SCENARIOS.map((s) => (
                 <div
                   key={s.label}
-                  className="flex items-center justify-between py-1 px-2 -mx-2 rounded hover:bg-black/4 transition-colors"
+                  className="flex items-center justify-between py-1 px-2 -mx-2 rounded transition-colors"
+                  onMouseEnter={e => (e.currentTarget.style.background = "var(--bg)")}
+                  onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                 >
-                  <span className="text-xs text-[#6B7280]">{s.label}</span>
-                  <span className="text-xs text-[#9CA3AF]">
-                    {Math.round((s.amount / s.valuation) * 100)}% equity
+                  <span className="text-[12px]" style={{ color: "var(--text-secondary)" }}>{s.label}</span>
+                  <span className="text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
+                    {Math.round((s.amount / s.valuation) * 100)}% eq.
                   </span>
                 </div>
               ))}
             </div>
             <Link
               href="/strategy"
-              className="mt-2 inline-flex items-center text-xs font-medium text-[#DC2626] hover:underline"
+              className="mt-2 inline-flex items-center text-[12px] font-medium"
+              style={{ color: "var(--red)" }}
             >
               Define official number →
             </Link>

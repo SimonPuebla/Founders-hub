@@ -8,18 +8,18 @@ import { isOverdue } from "@/lib/utils";
 import type { Task } from "@/types";
 
 const STATUS_TAG: Record<string, { label: string; color: string }> = {
-  blocked: { label: "Blocked", color: "text-[#DC2626] bg-[#FEF2F2]" },
-  doing: { label: "Active", color: "text-[#2563EB] bg-[#EFF6FF]" },
-  waiting: { label: "Waiting", color: "text-[#D97706] bg-[#FFFBEB]" },
+  blocked: { label: "Blocked", color: "text-[var(--red)] bg-[var(--red-light)]" },
+  doing: { label: "Active", color: "text-[var(--blue)] bg-[var(--blue-light)]" },
+  waiting: { label: "Waiting", color: "text-[var(--amber)] bg-[var(--amber-light)]" },
   todo: { label: "", color: "" },
-  delegated: { label: "Delegated", color: "text-[#7C3AED] bg-purple-50" },
+  delegated: { label: "Delegated", color: "text-[var(--purple)] bg-[var(--purple-light)]" },
 };
 
 const PRIORITY_DOT: Record<string, string> = {
-  critical: "bg-[#DC2626]",
+  critical: "bg-[var(--red)]",
   high: "bg-[#EA580C]",
-  medium: "bg-[#D97706]",
-  low: "bg-[#D1D5DB]",
+  medium: "bg-[var(--amber)]",
+  low: "bg-[var(--border-strong)]",
 };
 
 interface MainTasksWidgetProps {
@@ -39,7 +39,6 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
       .eq("id", id);
   }
 
-  // Group tasks by project (show max 4 groups, 4 tasks each)
   const grouped = tasks
     .filter((t) => !done.has(t.id))
     .reduce<Record<string, Task[]>>((acc, task) => {
@@ -56,14 +55,20 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
     <div className="glass p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold text-[#111827]">Tasks Today</p>
+          <p className="text-[13px] font-semibold" style={{ color: "var(--text-primary)" }}>Tasks Today</p>
           {totalCount > 0 && (
-            <span className="text-xs font-medium text-[#6B7280] bg-black/6 px-1.5 py-0.5 rounded-md">
+            <span
+              className="text-[11px] font-medium tabular-nums px-1.5 py-0.5 rounded-md"
+              style={{ color: "var(--text-muted)", background: "var(--bg)" }}
+            >
               {totalCount}
             </span>
           )}
         </div>
-        <Link href="/tasks" className="text-xs text-[#6B7280] hover:text-[#2563EB] transition-colors">
+        <Link href="/tasks" className="text-[12px] transition-colors" style={{ color: "var(--text-muted)" }}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--blue)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}
+        >
           All tasks →
         </Link>
       </div>
@@ -72,18 +77,20 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i}>
-              <div className="h-3 w-24 bg-black/5 rounded mb-2 animate-pulse" />
+              <div className="h-3 w-24 rounded mb-2 animate-pulse" style={{ background: "var(--bg)" }} />
               <div className="space-y-2">
-                {[1, 2].map((j) => <div key={j} className="h-7 bg-black/4 rounded-lg animate-pulse" />)}
+                {[1, 2].map((j) => (
+                  <div key={j} className="h-7 rounded-lg animate-pulse" style={{ background: "var(--bg)" }} />
+                ))}
               </div>
             </div>
           ))}
         </div>
       ) : groups.length === 0 ? (
         <div className="py-4">
-          <p className="text-sm font-medium text-[#D97706]">No tasks for today</p>
-          <p className="text-sm text-[#6B7280] mt-1">Define today&apos;s execution to move forward.</p>
-          <Link href="/tasks" className="mt-2 inline-block text-sm font-medium text-[#2563EB] hover:underline">
+          <p className="text-[13px] font-medium" style={{ color: "var(--amber)" }}>No tasks for today</p>
+          <p className="text-[13px] mt-1" style={{ color: "var(--text-secondary)" }}>Define today&apos;s execution to move forward.</p>
+          <Link href="/tasks" className="mt-2 inline-block text-[13px] font-medium" style={{ color: "var(--blue)" }}>
             Add task →
           </Link>
         </div>
@@ -91,7 +98,7 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
         <div className="space-y-5">
           {groups.map(([project, projectTasks]) => (
             <div key={project}>
-              <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-widest mb-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>
                 {project}
               </p>
               <div className="space-y-0.5">
@@ -102,41 +109,38 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
                   return (
                     <div
                       key={task.id}
-                      className="flex items-center gap-2.5 py-1.5 px-2 -mx-2 rounded-lg hover:bg-black/4 transition-colors group"
+                      className="flex items-center gap-2.5 py-1.5 px-2 -mx-2 rounded-lg transition-colors group"
+                      style={{ cursor: "default" }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "var(--bg)")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                     >
-                      {/* Checkbox */}
                       <button
                         onClick={() => markDone(task.id)}
-                        className="w-4 h-4 rounded border border-[#D1D5DB] hover:border-[#16A34A] hover:bg-[#F0FDF4] transition-all shrink-0 flex items-center justify-center"
+                        className="w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all"
+                        style={{ borderColor: "var(--border-strong)" }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--green)"; e.currentTarget.style.background = "var(--green-light)"; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border-strong)"; e.currentTarget.style.background = "transparent"; }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 bg-[#16A34A] transition-opacity" />
+                        <span className="w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "var(--green)" }} />
                       </button>
 
-                      {/* Priority dot */}
                       <span
-                        className={cn(
-                          "w-1.5 h-1.5 rounded-full shrink-0",
-                          PRIORITY_DOT[task.priority] || "bg-[#D1D5DB]"
-                        )}
+                        className={cn("w-1.5 h-1.5 rounded-full shrink-0", PRIORITY_DOT[task.priority] || "bg-[var(--border-strong)]")}
                       />
 
-                      {/* Title */}
                       <span
-                        className={cn(
-                          "text-sm flex-1 truncate",
-                          isBlocked ? "text-[#DC2626]" : "text-[#374151]"
-                        )}
+                        className="text-[13px] flex-1 truncate"
+                        style={{ color: isBlocked ? "var(--red)" : "var(--text-secondary)" }}
                       >
                         {task.title}
                       </span>
 
-                      {/* Tags */}
                       <div className="flex items-center gap-1.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                         {overdue && (
-                          <span className="text-[10px] text-[#DC2626]">overdue</span>
+                          <span className="text-[11px]" style={{ color: "var(--red)" }}>overdue</span>
                         )}
                         {tag?.label && (
-                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${tag.color}`}>
+                          <span className={`text-[11px] font-medium px-1.5 py-0.5 rounded ${tag.color}`}>
                             {tag.label}
                           </span>
                         )}

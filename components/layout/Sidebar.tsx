@@ -21,22 +21,17 @@ export function Sidebar() {
 
   return (
     <aside
-      className="w-[200px] h-screen flex flex-col shrink-0"
-      style={{
-        background: "rgba(255,255,255,0.6)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderRight: "1px solid rgba(0,0,0,0.07)",
-      }}
+      className="w-[200px] h-screen flex flex-col shrink-0 bg-white"
+      style={{ borderRight: "1px solid var(--border)" }}
     >
-      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+      <div className="px-5 pt-6 pb-5" style={{ borderBottom: "1px solid var(--border)" }}>
         <Link href="/dashboard">
-          <h1 className="text-sm font-bold tracking-tight text-[#111827]">ANDÉN</h1>
-          <p className="text-xs text-[#9CA3AF] mt-0.5">Founders Hub</p>
+          <h1 className="text-[13px] font-bold tracking-widest text-[#111827]" style={{ letterSpacing: "0.12em" }}>ANDÉN</h1>
+          <p className="text-[11px] mt-0.5" style={{ color: "var(--text-muted)" }}>Founders Hub</p>
         </Link>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-2.5 py-3 space-y-0.5 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
           const count = item.countKey ? counts[item.countKey as keyof typeof counts] : 0;
@@ -47,30 +42,25 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all",
+                "flex items-center justify-between px-2.5 py-[7px] rounded-lg text-[13px] transition-colors",
                 isActive
-                  ? "bg-[#2563EB]/10 text-[#2563EB]"
-                  : "text-[#6B7280] hover:text-[#111827] hover:bg-black/5"
+                  ? "bg-[var(--blue-light)] text-[var(--blue)] font-medium"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg)]"
               )}
             >
               <div className="flex items-center gap-2.5">
                 <Icon
-                  className={cn(
-                    "w-4 h-4 shrink-0",
-                    isActive ? "text-[#2563EB]" : "text-[#9CA3AF]"
-                  )}
+                  className={cn("w-[15px] h-[15px] shrink-0", isActive ? "text-[var(--blue)]" : "text-[var(--text-muted)]")}
                 />
-                <span className={cn("text-sm", isActive ? "font-medium" : "font-normal")}>
-                  {item.label}
-                </span>
+                <span>{item.label}</span>
               </div>
               {count > 0 && (
                 <span
                   className={cn(
-                    "text-xs px-1.5 py-0.5 rounded-full font-medium",
+                    "text-[11px] px-1.5 py-0.5 rounded-full font-medium tabular-nums",
                     item.countKey === "blocked_tasks"
-                      ? "bg-[#FEF2F2] text-[#DC2626]"
-                      : "bg-black/6 text-[#6B7280]"
+                      ? "bg-[var(--red-light)] text-[var(--red)]"
+                      : "bg-[var(--bg)] text-[var(--text-muted)]"
                   )}
                 >
                   {count}
@@ -81,17 +71,17 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-3 pb-5 pt-3" style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}>
+      <div className="px-2.5 pb-4 pt-2.5" style={{ borderTop: "1px solid var(--border)" }}>
         <Link
           href="/settings"
           className={cn(
-            "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all",
+            "flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-[13px] transition-colors",
             pathname === "/settings"
-              ? "bg-[#2563EB]/10 text-[#2563EB]"
-              : "text-[#6B7280] hover:text-[#111827] hover:bg-black/5"
+              ? "bg-[var(--blue-light)] text-[var(--blue)] font-medium"
+              : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg)]"
           )}
         >
-          <Settings className={cn("w-4 h-4 shrink-0", pathname === "/settings" ? "text-[#2563EB]" : "text-[#9CA3AF]")} />
+          <Settings className={cn("w-[15px] h-[15px] shrink-0", pathname === "/settings" ? "text-[var(--blue)]" : "text-[var(--text-muted)]")} />
           <span>Settings</span>
         </Link>
       </div>

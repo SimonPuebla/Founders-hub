@@ -40,8 +40,32 @@ npm run dev
 - `I` — New input (quick capture)
 - `Esc` — Close any panel/modal
 
+## Design System
+
+Installed: **Impeccable** (`.claude/skills/impeccable/`) — Stripe-inspired, OKLCH colors, clean cards.
+
+**Absolute bans:** glassmorphism as decoration, gradient text, pure black/gray, colored side-stripe card borders, Inter/Roboto by reflex.
+
+**Color:** CSS custom properties in `globals.css` via OKLCH. Use `var(--blue)`, `var(--text-primary)`, etc. Brand hue = 250.
+
+**Cards:** `.card`, `.card-hero`, `.card-elevated` classes. No blur/transparency.
+
+**Typography:** Jost (Google Font), 5-tier scale: 11/12/13/18/24px+. Numbers use `tabular-nums`.
+
+**Commands:** `/audit`, `/polish`, `/critique` — see `.claude/commands/`.
+
 ## Key Decisions
 - Single-user app, no auth required beyond service role
 - RLS policies allow all operations (open policy)
-- Geist font for both sans and mono
-- All colors use explicit hex values (no CSS variables for core palette)
+- Jost (Google Font) via next/font — weights 300–700
+- Colors via CSS custom properties (OKLCH) in globals.css
+
+## Coding Guidelines (Karpathy)
+
+**Think Before Coding** — State assumptions explicitly. If multiple interpretations exist, present them. If simpler approach exists, say so. Stop and ask when confused.
+
+**Simplicity First** — Minimum code that solves the problem. No features beyond what was asked, no abstractions for single-use code, no speculative flexibility. If 200 lines could be 50, rewrite.
+
+**Surgical Changes** — Touch only what you must. Don't improve adjacent code or refactor things that aren't broken. Every changed line should trace directly to the user's request.
+
+**Goal-Driven Execution** — Transform tasks into verifiable goals. For multi-step tasks, state a brief plan with verification steps.
