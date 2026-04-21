@@ -32,7 +32,7 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
   const supabase = createClient();
 
   async function markDone(id: string) {
-    setDone((prev) => new Set([...prev, id]));
+    setDone((prev) => { const next = new Set(prev); next.add(id); return next; });
     await supabase
       .from("tasks")
       .update({ status: "done", updated_at: new Date().toISOString() })
