@@ -89,34 +89,34 @@ export default function TasksPage() {
   return (
     <div className="flex h-full">
       <div className={`flex-1 flex flex-col min-h-0 ${selectedTask ? "mr-[420px]" : ""}`}>
-        <div className="px-8 pt-8 pb-5 border-b border-[#1e1e1e]">
+        <div className="px-8 pt-8 pb-5 border-b border-[#E6E8EB]">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-lg font-semibold text-[#f0f0f0]">Tasks</h1>
-              <p className="font-mono text-xs text-[#4a4a4a] mt-0.5">
+              <h1 className="text-lg font-semibold text-[#111827]">Tasks</h1>
+              <p className="text-xs text-[#9CA3AF] mt-0.5">
                 {tasks.length} tasks
                 {blockedCount > 0 && (
-                  <span className="text-[#ef4444] ml-1">· {blockedCount} blocked</span>
+                  <span className="text-[#DC2626] ml-1">· {blockedCount} blocked</span>
                 )}
               </p>
             </div>
-            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5">
+            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5 bg-[#2563EB] hover:bg-[#1D4ED8]">
               <Plus className="w-3.5 h-3.5" />
               New Task
-              <span className="font-mono text-[10px] opacity-50 ml-1">N</span>
+              <span className="text-[10px] opacity-50 ml-1">N</span>
             </Button>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex items-center border border-[#1e1e1e] rounded overflow-hidden">
+            <div className="flex items-center border border-[#E6E8EB] rounded-lg overflow-hidden">
               {(["all", "today", "week"] as ViewMode[]).map((v) => (
                 <button
                   key={v}
                   onClick={() => setView(v)}
-                  className={`px-3 py-1.5 font-mono text-xs transition-colors ${
+                  className={`px-3 py-1.5 text-xs transition-colors ${
                     view === v
-                      ? "bg-[#1a1a1a] text-[#f0f0f0]"
-                      : "text-[#4a4a4a] hover:text-[#6b6b6b]"
+                      ? "bg-[#EFF6FF] text-[#2563EB] font-medium"
+                      : "text-[#6B7280] hover:text-[#111827]"
                   }`}
                 >
                   {v === "all" ? "All" : v === "today" ? "Hoy" : "Esta Semana"}
@@ -126,7 +126,7 @@ export default function TasksPage() {
 
             <div className="flex items-center gap-1.5 flex-1">
               <div className="relative flex-1 max-w-[200px]">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#4a4a4a]" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#9CA3AF]" />
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}

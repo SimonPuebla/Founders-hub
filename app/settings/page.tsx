@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, ExternalLink, Calendar, Database, RefreshCw, Zap } from "lucide-react";
+import { CheckCircle2, ExternalLink, Calendar, Database, RefreshCw, Zap, MessageSquare } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export default function SettingsPage() {
   const [googleConnected, setGoogleConnected] = useState(false);
   const [seeding, setSeeding] = useState(false);
   const [seedingSimo, setSeedingSimo] = useState(false);
+  const [seedingMeetings, setSeedingMeetings] = useState(false);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -38,6 +39,22 @@ export default function SettingsPage() {
       .upsert({ id: "default", google_connected: false, google_refresh_token: null, updated_at: new Date().toISOString() });
     setGoogleConnected(false);
     toast({ title: "Google Calendar disconnected" });
+  }
+
+  async function runSeedMeetings() {
+    setSeedingMeetings(true);
+    try {
+      const res = await fetch("/api/seed-meetings", { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        toast({ title: "Meeting tasks loaded", description: `${data.inserted} tareas de reuniones Apr 7–20 cargadas.` });
+      } else {
+        toast({ title: "Seed failed", description: String(data.error), variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Error", variant: "destructive" });
+    }
+    setSeedingMeetings(false);
   }
 
   async function runSeed() {
@@ -136,6 +153,32 @@ export default function SettingsPage() {
             </Button>
             <p className="text-xs text-[#9CA3AF] mt-2">
               Ejecutar una sola vez. Inserta ~23 tareas, 3 OKRs, 5 oportunidades.
+            </p>
+          </div>
+        </section>
+
+        {/* Meeting tasks seed */}
+        <section className="bg-white border border-[#E6E8EB] rounded-xl overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#E6E8EB]">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-[#2563EB]" />
+              <h2 className="text-sm font-semibold text-[#111827]">Tareas de Reuniones (Apr 7–20)</h2>
+            </div>
+            <p className="text-xs text-[#6B7280] mt-1">
+              Carga las tareas extraídas de reuniones: Lore, Gago, Seba BD, Camila Russo, Midnight, Ecosystem.
+            </p>
+          </div>
+          <div className="px-5 py-4">
+            <Button
+              onClick={runSeedMeetings}
+              disabled={seedingMeetings}
+              className="gap-2 bg-[#2563EB] hover:bg-[#1D4ED8]"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${seedingMeetings ? "animate-spin" : ""}`} />
+              {seedingMeetings ? "Cargando..." : "Cargar tareas de reuniones"}
+            </Button>
+            <p className="text-xs text-[#9CA3AF] mt-2">
+              30 tareas desde reuniones Apr 7–20, 2026.
             </p>
           </div>
         </section>

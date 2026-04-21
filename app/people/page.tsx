@@ -13,12 +13,12 @@ import type { Person, PersonRelationship } from "@/types";
 
 const RELATIONSHIP_COLORS: Record<PersonRelationship, string> = {
   team: "text-[#7c5cfc] bg-[#7c5cfc]/10",
-  investor: "text-[#22c55e] bg-[#22c55e]/10",
-  government: "text-[#3b82f6] bg-[#3b82f6]/10",
-  ecosystem: "text-[#f97316] bg-[#f97316]/10",
-  startup: "text-[#f59e0b] bg-[#f59e0b]/10",
-  media: "text-[#ef4444] bg-[#ef4444]/10",
-  other: "text-[#6b6b6b] bg-[#1e1e1e]",
+  investor: "text-[#16A34A] bg-[#16A34A]/10",
+  government: "text-[#2563EB] bg-[#2563EB]/10",
+  ecosystem: "text-[#D97706] bg-[#D97706]/10",
+  startup: "text-[#D97706] bg-amber-50",
+  media: "text-[#DC2626] bg-[#DC2626]/10",
+  other: "text-[#6B7280] bg-[#F3F4F6]",
 };
 
 export default function PeoplePage() {
@@ -51,14 +51,14 @@ export default function PeoplePage() {
   return (
     <div className="flex h-full">
       <div className={`flex-1 flex flex-col min-h-0 ${selected ? "mr-[420px]" : ""}`}>
-        <div className="px-8 pt-8 pb-5 border-b border-[#1e1e1e] flex items-center justify-between">
+        <div className="px-8 pt-8 pb-5 border-b border-[#E6E8EB] flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-[#f0f0f0]">People</h1>
-            <p className="font-mono text-xs text-[#4a4a4a] mt-0.5">{people.length} contacts</p>
+            <h1 className="text-lg font-semibold text-[#111827]">People</h1>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">{people.length} contacts</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#4a4a4a]" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#9CA3AF]" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -66,7 +66,7 @@ export default function PeoplePage() {
                 className="pl-7 h-7 text-xs w-[160px]"
               />
             </div>
-            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5">
+            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5 bg-[#2563EB] hover:bg-[#1D4ED8]">
               <Plus className="w-3.5 h-3.5" />
               Add Person
             </Button>
@@ -77,49 +77,49 @@ export default function PeoplePage() {
           {loading ? (
             <div className="px-8 py-6 space-y-1">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-12 bg-[#111111] rounded animate-pulse" />
+                <div key={i} className="h-12 bg-[#F3F4F6] rounded-lg animate-pulse" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
             <div className="px-8 py-16 text-center">
-              <p className="font-mono text-sm text-[#4a4a4a]">No contacts yet.</p>
+              <p className="text-sm text-[#9CA3AF]">No contacts yet.</p>
               <Button variant="outline" size="sm" className="mt-4" onClick={() => setShowForm(true)}>
                 Add first contact
               </Button>
             </div>
           ) : (
             <div className="px-8">
-              <div className="py-3 grid grid-cols-12 gap-4 border-b border-[#1e1e1e]">
-                <span className="col-span-3 font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">Name</span>
-                <span className="col-span-2 font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">Role</span>
-                <span className="col-span-2 font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">Organization</span>
-                <span className="col-span-2 font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">Relationship</span>
-                <span className="col-span-2 font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">Last Contact</span>
-                <span className="col-span-1 font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]"></span>
+              <div className="py-3 grid grid-cols-12 gap-4 border-b border-[#E6E8EB]">
+                <span className="col-span-3 text-[10px] uppercase tracking-wider text-[#9CA3AF]">Name</span>
+                <span className="col-span-2 text-[10px] uppercase tracking-wider text-[#9CA3AF]">Role</span>
+                <span className="col-span-2 text-[10px] uppercase tracking-wider text-[#9CA3AF]">Organization</span>
+                <span className="col-span-2 text-[10px] uppercase tracking-wider text-[#9CA3AF]">Relationship</span>
+                <span className="col-span-2 text-[10px] uppercase tracking-wider text-[#9CA3AF]">Last Contact</span>
+                <span className="col-span-1 text-[10px] uppercase tracking-wider text-[#9CA3AF]"></span>
               </div>
               {filtered.map((person) => (
                 <div
                   key={person.id}
                   className={cn(
-                    "py-3 grid grid-cols-12 gap-4 border-b border-[#0f0f0f] cursor-pointer hover:bg-[#111111] rounded transition-colors group",
-                    selected?.id === person.id && "bg-[#1a1a1a]"
+                    "py-3 grid grid-cols-12 gap-4 border-b border-[#F3F4F6] cursor-pointer hover:bg-[#F9FAFB] rounded transition-colors group",
+                    selected?.id === person.id && "bg-[#EFF6FF]"
                   )}
                   onClick={() => setSelected(selected?.id === person.id ? null : person)}
                 >
-                  <span className="col-span-3 text-sm text-[#f0f0f0] truncate">{person.name}</span>
-                  <span className="col-span-2 text-xs text-[#6b6b6b] truncate">{person.role || "—"}</span>
-                  <span className="col-span-2 text-xs text-[#6b6b6b] truncate">{person.organization || "—"}</span>
+                  <span className="col-span-3 text-sm text-[#111827] truncate">{person.name}</span>
+                  <span className="col-span-2 text-xs text-[#6B7280] truncate">{person.role || "—"}</span>
+                  <span className="col-span-2 text-xs text-[#6B7280] truncate">{person.organization || "—"}</span>
                   <div className="col-span-2">
                     <span
                       className={cn(
-                        "font-mono text-[10px] px-1.5 py-0.5 rounded",
+                        "text-[10px] px-1.5 py-0.5 rounded",
                         RELATIONSHIP_COLORS[person.relationship]
                       )}
                     >
                       {person.relationship}
                     </span>
                   </div>
-                  <span className="col-span-2 font-mono text-[10px] text-[#4a4a4a]">
+                  <span className="col-span-2 text-[10px] text-[#9CA3AF]">
                     {person.last_contact ? formatDate(person.last_contact, "dd MMM yyyy") : "—"}
                   </span>
                   <div className="col-span-1 flex justify-end">

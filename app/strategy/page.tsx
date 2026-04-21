@@ -48,15 +48,15 @@ export default function StrategyPage() {
   return (
     <div className="flex h-full">
       <div className={`flex-1 flex flex-col min-h-0 ${selectedOKR ? "mr-[420px]" : ""}`}>
-        <div className="px-8 pt-8 pb-6 border-b border-[#1e1e1e] flex items-center justify-between">
+        <div className="px-8 pt-8 pb-6 border-b border-[#E6E8EB] flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-[#f0f0f0]">Strategy</h1>
-            <p className="font-mono text-xs text-[#4a4a4a] mt-0.5">OKRs + KPIs — Q2 2025</p>
+            <h1 className="text-lg font-semibold text-[#111827]">Strategy</h1>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">OKRs + KPIs — 2026</p>
           </div>
           <Button
             size="sm"
             onClick={() => setShowForm(true)}
-            className="gap-1.5"
+            className="gap-1.5 bg-[#2563EB] hover:bg-[#1D4ED8]"
           >
             <Plus className="w-3.5 h-3.5" />
             New OKR
@@ -67,14 +67,14 @@ export default function StrategyPage() {
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-24 rounded border border-[#1e1e1e] bg-[#111111] animate-pulse" />
+                <div key={i} className="h-24 rounded-xl border border-[#E6E8EB] bg-[#F3F4F6] animate-pulse" />
               ))}
             </div>
           ) : (
             <>
               {activeOKRs.length === 0 && otherOKRs.length === 0 ? (
                 <div className="text-center py-16">
-                  <p className="font-mono text-sm text-[#4a4a4a]">No OKRs yet.</p>
+                  <p className="text-sm text-[#9CA3AF]">No OKRs yet.</p>
                   <Button
                     variant="outline"
                     size="sm"
@@ -98,7 +98,7 @@ export default function StrategyPage() {
                   {otherOKRs.length > 0 && (
                     <>
                       <div className="pt-4 pb-2">
-                        <p className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">
+                        <p className="text-[10px] uppercase tracking-wider text-[#9CA3AF]">
                           Completed / Paused
                         </p>
                       </div>

@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
 import type { Opportunity, OpportunityStatus } from "@/types";
-import { cn } from "@/lib/utils";
 
 const COLUMNS: { status: OpportunityStatus; label: string }[] = [
   { status: "captured", label: "Captured" },
@@ -52,14 +51,14 @@ export default function OpportunitiesPage() {
   return (
     <div className="flex h-full">
       <div className={`flex-1 flex flex-col min-h-0 ${selectedOpp ? "mr-[420px]" : ""}`}>
-        <div className="px-8 pt-8 pb-5 border-b border-[#1e1e1e] flex items-center justify-between">
+        <div className="px-8 pt-8 pb-5 border-b border-[#E6E8EB] flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-[#f0f0f0]">Opportunities</h1>
-            <p className="font-mono text-xs text-[#4a4a4a] mt-0.5">{opps.length} total</p>
+            <h1 className="text-lg font-semibold text-[#111827]">Opportunities</h1>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">{opps.length} total</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#4a4a4a]" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#9CA3AF]" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -67,10 +66,10 @@ export default function OpportunitiesPage() {
                 className="pl-7 h-7 text-xs w-[180px]"
               />
             </div>
-            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5">
+            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5 bg-[#2563EB] hover:bg-[#1D4ED8]">
               <Plus className="w-3.5 h-3.5" />
               Capture
-              <span className="font-mono text-[10px] opacity-50">O</span>
+              <span className="text-[10px] opacity-50">O</span>
             </Button>
           </div>
         </div>
@@ -80,8 +79,8 @@ export default function OpportunitiesPage() {
             <div className="px-8 py-6 flex gap-4">
               {COLUMNS.map((col) => (
                 <div key={col.status} className="w-[260px] space-y-2">
-                  <div className="h-6 bg-[#111111] rounded animate-pulse" />
-                  <div className="h-20 bg-[#111111] rounded animate-pulse" />
+                  <div className="h-6 bg-[#F3F4F6] rounded animate-pulse" />
+                  <div className="h-20 bg-[#F3F4F6] rounded animate-pulse" />
                 </div>
               ))}
             </div>
@@ -92,10 +91,10 @@ export default function OpportunitiesPage() {
                 return (
                   <div key={col.status} className="w-[260px] shrink-0">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a]">
+                      <span className="text-[10px] uppercase tracking-wider text-[#9CA3AF]">
                         {col.label}
                       </span>
-                      <span className="font-mono text-[10px] text-[#4a4a4a] bg-[#1e1e1e] px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-[#6B7280] bg-[#F3F4F6] px-1.5 py-0.5 rounded">
                         {colOpps.length}
                       </span>
                     </div>
@@ -109,8 +108,8 @@ export default function OpportunitiesPage() {
                         />
                       ))}
                       {colOpps.length === 0 && (
-                        <div className="h-16 rounded border border-dashed border-[#1e1e1e] flex items-center justify-center">
-                          <span className="font-mono text-[10px] text-[#2a2a2a]">empty</span>
+                        <div className="h-16 rounded-lg border border-dashed border-[#E6E8EB] flex items-center justify-center">
+                          <span className="text-[10px] text-[#9CA3AF]">empty</span>
                         </div>
                       )}
                     </div>

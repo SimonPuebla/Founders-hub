@@ -74,19 +74,19 @@ export function InputsContent() {
   return (
     <div className="flex h-full">
       <div className={`flex-1 flex flex-col min-h-0 ${selectedInput ? "mr-[520px]" : ""}`}>
-        <div className="px-8 pt-8 pb-5 border-b border-[#1e1e1e] flex items-center justify-between">
+        <div className="px-8 pt-8 pb-5 border-b border-[#E6E8EB] flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-[#f0f0f0]">Inputs</h1>
-            <p className="font-mono text-xs text-[#4a4a4a] mt-0.5">
+            <h1 className="text-lg font-semibold text-[#111827]">Inputs</h1>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">
               {inputs.length} total
               {unprocessed.length > 0 && (
-                <span className="text-[#f59e0b] ml-1">· {unprocessed.length} sin procesar</span>
+                <span className="text-[#D97706] ml-1">· {unprocessed.length} sin procesar</span>
               )}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#4a4a4a]" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[#9CA3AF]" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -108,10 +108,10 @@ export function InputsContent() {
                 <SelectItem value="weekly_recap">Weekly Recap</SelectItem>
               </SelectContent>
             </Select>
-            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5">
+            <Button size="sm" onClick={() => setShowForm(true)} className="gap-1.5 bg-[#2563EB] hover:bg-[#1D4ED8]">
               <Plus className="w-3.5 h-3.5" />
               New Input
-              <span className="font-mono text-[10px] opacity-50">I</span>
+              <span className="text-[10px] opacity-50">I</span>
             </Button>
           </div>
         </div>
@@ -120,12 +120,12 @@ export function InputsContent() {
           {loading ? (
             <div className="space-y-2">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-16 bg-[#111111] rounded animate-pulse" />
+                <div key={i} className="h-16 bg-[#F3F4F6] rounded-lg animate-pulse" />
               ))}
             </div>
           ) : inputs.length === 0 ? (
             <div className="text-center py-16">
-              <p className="font-mono text-sm text-[#4a4a4a]">No inputs yet.</p>
+              <p className="text-sm text-[#9CA3AF]">No inputs yet.</p>
               <Button variant="outline" size="sm" className="mt-4" onClick={() => setShowForm(true)}>
                 Add first input
               </Button>
