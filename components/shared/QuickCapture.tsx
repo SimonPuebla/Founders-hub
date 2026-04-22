@@ -372,6 +372,75 @@ function NoteTab({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
+function ReadTab({ onSuccess }: { onSuccess: () => void }) {
+  const [url, setUrl] = React.useState("");
+  const [title, setTitle] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!url.trim()) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const supabase = createClient();
+      const { error: sbError } = await supabase.from("reads").insert({
+        url: url.trim(),
+        title: title.trim() || null,
+        notes: notes.trim() || null,
+        status: "unread",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+      if (sbError) throw sbError;
+      onSuccess();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error saving read");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4">
+      <div>
+        <FieldLabel>URL *</FieldLabel>
+        <Input
+          autoFocus
+          type="url"
+          placeholder="https://..."
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          required
+        />
+      </div>
+
+      <div>
+        <FieldLabel>Label <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>(optional)</span></FieldLabel>
+        <Input
+          placeholder="Article title or your own label..."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <FieldLabel>Note <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>(optional)</span></FieldLabel>
+        <Input
+          placeholder="Why saving this..."
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
+      </div>
+
+      {error && <p className="text-[11px]" style={{ color: "var(--red)" }}>{error}</p>}
+      <SaveButton loading={loading} disabled={loading || !url.trim()} label="Save Read" />
+    </form>
+  );
+}
+
 function SuccessState() {
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-10">
@@ -467,6 +536,7 @@ export function QuickCapture() {
                 <TabsTrigger value="opportunity">Opportunity</TabsTrigger>
                 <TabsTrigger value="input">Input</TabsTrigger>
                 <TabsTrigger value="note">Note</TabsTrigger>
+                <TabsTrigger value="read">Read</TabsTrigger>
               </TabsList>
 
               <TabsContent value="task">
@@ -480,6 +550,9 @@ export function QuickCapture() {
               </TabsContent>
               <TabsContent value="note">
                 <NoteTab onSuccess={handleSuccess} />
+              </TabsContent>
+              <TabsContent value="read">
+                <ReadTab onSuccess={handleSuccess} />
               </TabsContent>
             </Tabs>
           )}

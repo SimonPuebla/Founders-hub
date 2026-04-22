@@ -166,6 +166,17 @@ export interface CalendarEvent {
   hasLinkedInput?: boolean;
 }
 
+export interface Read {
+  id: string;
+  url: string;
+  title?: string;
+  notes?: string;
+  tags?: string[];
+  status: "unread" | "reading" | "done";
+  created_at: string;
+  updated_at: string;
+}
+
 export interface AppSettings {
   id: string;
   weekly_focus?: string;

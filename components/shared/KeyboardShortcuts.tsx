@@ -79,6 +79,11 @@ export function KeyboardShortcuts() {
           e.preventDefault();
           openCapture("input");
           break;
+        case "r":
+        case "R":
+          e.preventDefault();
+          openCapture("read");
+          break;
       }
     }
 

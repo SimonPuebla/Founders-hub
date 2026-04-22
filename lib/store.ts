@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { CalendarEvent } from "@/types";
 
-export type QuickCaptureTab = "task" | "opportunity" | "input" | "note";
+export type QuickCaptureTab = "task" | "opportunity" | "input" | "note" | "read";
 
 interface AppStore {
   calendarEvents: CalendarEvent[];
