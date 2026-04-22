@@ -186,15 +186,10 @@ function TaskRow({ task, isSelected, onClick, onEdit, onCycleStatus, onDone, onP
         )}
         <button
           onClick={onCycleStatus}
-          className="opacity-0 group-hover:opacity-100 transition-opacity"
           title="Cycle status"
         >
           <TaskStatusBadge status={task.status} />
         </button>
-        <TaskStatusBadge
-          status={task.status}
-          className="opacity-100 group-hover:opacity-0 absolute pointer-events-none"
-        />
         <Button
           variant="ghost"
           size="icon-sm"
