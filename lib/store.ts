@@ -12,6 +12,8 @@ interface AppStore {
   setQuickCaptureOpen: (open: boolean) => void;
   quickCaptureTab: QuickCaptureTab;
   setQuickCaptureTab: (tab: QuickCaptureTab) => void;
+  chatOpen: boolean;
+  setChatOpen: (open: boolean) => void;
 }
 
 export const useAppStore = create<AppStore>((set) => ({
@@ -23,4 +25,6 @@ export const useAppStore = create<AppStore>((set) => ({
   setQuickCaptureOpen: (open) => set({ quickCaptureOpen: open }),
   quickCaptureTab: "task",
   setQuickCaptureTab: (tab) => set({ quickCaptureTab: tab }),
+  chatOpen: false,
+  setChatOpen: (open) => set({ chatOpen: open }),
 }));

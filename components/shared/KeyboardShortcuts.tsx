@@ -27,6 +27,8 @@ export function KeyboardShortcuts() {
     quickCaptureOpen,
     setQuickCaptureOpen,
     setQuickCaptureTab,
+    chatOpen,
+    setChatOpen,
   } = useAppStore();
 
   React.useEffect(() => {
@@ -84,6 +86,11 @@ export function KeyboardShortcuts() {
           e.preventDefault();
           openCapture("read");
           break;
+        case "c":
+        case "C":
+          e.preventDefault();
+          setChatOpen(!chatOpen);
+          break;
       }
     }
 
@@ -95,6 +102,8 @@ export function KeyboardShortcuts() {
     quickCaptureOpen,
     setQuickCaptureOpen,
     setQuickCaptureTab,
+    chatOpen,
+    setChatOpen,
   ]);
 
   return null;

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { CommandPalette } from "@/components/shared/CommandPalette";
 import { QuickCapture } from "@/components/shared/QuickCapture";
+import { ChatPanel } from "@/components/shared/ChatPanel";
 import { KeyboardShortcuts } from "@/components/shared/KeyboardShortcuts";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -34,6 +35,7 @@ export default function RootLayout({
         </div>
         <CommandPalette />
         <QuickCapture />
+        <ChatPanel />
         <KeyboardShortcuts />
         <Toaster />
       </body>
