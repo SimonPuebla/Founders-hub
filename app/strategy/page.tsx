@@ -48,15 +48,16 @@ export default function StrategyPage() {
   return (
     <div className="flex h-full">
       <div className={`flex-1 flex flex-col min-h-0 ${selectedOKR ? "mr-[420px]" : ""}`}>
-        <div className="px-8 pt-8 pb-6 border-b border-[#E6E8EB] flex items-center justify-between">
+        <div className="px-8 pt-8 pb-6 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
           <div>
-            <h1 className="text-lg font-semibold text-[#111827]">Strategy</h1>
-            <p className="text-xs text-[#9CA3AF] mt-0.5">OKRs + KPIs — 2026</p>
+            <h1 className="text-[18px] font-semibold" style={{ color: "var(--text-primary)" }}>Strategy</h1>
+            <p className="text-[12px] mt-0.5" style={{ color: "var(--text-muted)" }}>OKRs + KPIs — 2026</p>
           </div>
           <Button
             size="sm"
             onClick={() => setShowForm(true)}
-            className="gap-1.5 bg-[#2563EB] hover:bg-[#1D4ED8]"
+            className="gap-1.5"
+            style={{ background: "var(--blue)", color: "white" }}
           >
             <Plus className="w-3.5 h-3.5" />
             New OKR
@@ -67,7 +68,7 @@ export default function StrategyPage() {
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-24 rounded-xl border border-[#E6E8EB] bg-[#F3F4F6] animate-pulse" />
+                <div key={i} className="h-24 rounded-lg animate-pulse" style={{ background: "var(--bg)", border: "1px solid var(--border)" }} />
               ))}
             </div>
           ) : (

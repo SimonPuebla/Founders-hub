@@ -6,18 +6,17 @@ import { HeroCard } from "@/components/dashboard/HeroCard";
 import { FocusModeWidget } from "@/components/dashboard/FocusModeWidget";
 import { OppBacklogWidget } from "@/components/dashboard/OppBacklogWidget";
 import { MainTasksWidget } from "@/components/dashboard/MainTasksWidget";
-import { InboxCriticalWidget } from "@/components/dashboard/InboxCriticalWidget";
 import { OKRSnapshotWidget } from "@/components/dashboard/OKRSnapshotWidget";
 import { KPIFundraisingWidget } from "@/components/dashboard/KPIFundraisingWidget";
 import { ActiveProjectWidget } from "@/components/dashboard/ActiveProjectWidget";
+import { UpcomingTripsWidget } from "@/components/dashboard/UpcomingTripsWidget";
 import { QuickActionsBar } from "@/components/dashboard/QuickActionsBar";
-import type { OKR, Task, Opportunity, Input } from "@/types";
+import type { OKR, Task, Opportunity } from "@/types";
 
 export default function DashboardPage() {
   const [okrs, setOkrs] = useState<OKR[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [opps, setOpps] = useState<Opportunity[]>([]);
-  const [inputs, setInputs] = useState<Input[]>([]);
   const [priorities, setPriorities] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +26,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadAll() {
-      const [okrRes, taskRes, oppRes, inputRes, settingsRes] = await Promise.all([
+      const [okrRes, taskRes, oppRes, settingsRes] = await Promise.all([
         supabase.from("okrs").select("*, kpis(*)").order("created_at"),
         supabase
           .from("tasks")
@@ -40,19 +39,12 @@ export default function DashboardPage() {
           .select("*, okr:okrs(id,title)")
           .in("status", ["active", "reviewing", "captured"])
           .order("urgency"),
-        supabase
-          .from("inputs")
-          .select("*")
-          .is("extracted_tasks", null)
-          .order("created_at", { ascending: false })
-          .limit(8),
         supabase.from("settings").select("weekly_focus").single(),
       ]);
 
       setOkrs((okrRes.data as OKR[]) || []);
       setTasks((taskRes.data as Task[]) || []);
       setOpps((oppRes.data as Opportunity[]) || []);
-      setInputs((inputRes.data as Input[]) || []);
 
       if (settingsRes.data?.weekly_focus) {
         try {
@@ -75,9 +67,6 @@ export default function DashboardPage() {
   const blockedTasks = tasks.filter((t) => t.status === "blocked");
   const inProgressTasks = tasks.filter(
     (t) => t.status === "doing" || (t.status as string) === "in_progress"
-  );
-  const criticalTasks = tasks.filter(
-    (t) => t.priority === "critical" || t.status === "blocked"
   );
 
   const seedOKR = okrs.find(
@@ -105,8 +94,8 @@ export default function DashboardPage() {
           loading={loading}
         />
 
-        {/* MAIN GRID: Left | Tasks(wide) | Inbox | Right */}
-        <div className="grid grid-cols-[220px_1fr_280px_260px] gap-4">
+        {/* MAIN GRID: Left | Tasks | Right */}
+        <div className="grid grid-cols-[220px_1fr_260px] gap-4">
 
           {/* LEFT COLUMN */}
           <div className="space-y-4">
@@ -114,20 +103,14 @@ export default function DashboardPage() {
             <OppBacklogWidget opps={opps} loading={loading} />
           </div>
 
-          {/* CENTER-LEFT: Main Tasks */}
+          {/* CENTER: Main Tasks */}
           <MainTasksWidget tasks={todayTasks} loading={loading} />
-
-          {/* CENTER-RIGHT: Inbox / Critical */}
-          <InboxCriticalWidget
-            inputs={inputs}
-            criticalTasks={criticalTasks}
-            loading={loading}
-          />
 
           {/* RIGHT COLUMN */}
           <div className="space-y-4">
             <OKRSnapshotWidget okrs={okrs} loading={loading} />
             <KPIFundraisingWidget okr={seedOKR} kpi={seedKPI} loading={loading} />
+            <UpcomingTripsWidget />
             <ActiveProjectWidget tasks={tasks} loading={loading} />
           </div>
         </div>

@@ -12,10 +12,8 @@ const TabsList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn(
-      "inline-flex items-center gap-0 border-b border-[#1e1e1e] w-full",
-      className
-    )}
+    className={cn("inline-flex items-center gap-0 w-full", className)}
+    style={{ borderBottom: "1px solid var(--border)" }}
     {...props}
   />
 ));
@@ -28,9 +26,12 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center px-4 py-2 font-mono text-xs tracking-wide text-[#4a4a4a] border-b-2 border-transparent -mb-[1px] transition-colors hover:text-[#6b6b6b] data-[state=active]:text-[#f0f0f0] data-[state=active]:border-[#7c5cfc]",
+      "inline-flex items-center justify-center px-4 py-2 text-[12px] font-medium border-b-2 border-transparent -mb-[1px] transition-colors data-[state=active]:border-[var(--blue)]",
       className
     )}
+    style={{ color: "var(--text-muted)" }}
+    onMouseEnter={e => { if (!e.currentTarget.dataset.state || e.currentTarget.dataset.state !== "active") e.currentTarget.style.color = "var(--text-secondary)"; }}
+    onMouseLeave={e => { if (!e.currentTarget.dataset.state || e.currentTarget.dataset.state !== "active") e.currentTarget.style.color = "var(--text-muted)"; }}
     {...props}
   />
 ));

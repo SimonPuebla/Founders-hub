@@ -34,7 +34,7 @@ const OKRS = [
     progress: 20,
     owner: "Simo",
     krs: [
-      { title: "$1.5M a $20M post-money cap", current_value: 0, target_value: 1500000, unit: "USD" },
+      { title: "$1.5M a $20M post-money cap", current_value: 1300000, target_value: 1500000, unit: "USD" },
     ],
   },
 ];

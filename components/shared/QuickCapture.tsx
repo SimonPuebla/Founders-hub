@@ -25,8 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// ─── helpers ────────────────────────────────────────────────────────────────
-
 function todayISO() {
   return new Date().toISOString().split("T")[0];
 }
@@ -37,17 +35,27 @@ function quickNoteTitle() {
   return `Nota rápida - ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 }
 
-// ─── sub-components ──────────────────────────────────────────────────────────
-
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] mb-1">
+    <label className="block text-[11px] font-medium uppercase tracking-wider mb-1" style={{ color: "var(--text-muted)" }}>
       {children}
     </label>
   );
 }
 
-// ─── Task Tab ────────────────────────────────────────────────────────────────
+function SaveButton({ loading, disabled, label }: { loading: boolean; disabled: boolean; label: string }) {
+  return (
+    <button
+      type="submit"
+      disabled={disabled}
+      className="mt-1 flex items-center justify-center gap-2 rounded px-4 py-2 w-full text-[13px] font-medium text-white transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+      style={{ background: "var(--blue)" }}
+    >
+      {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+      {label}
+    </button>
+  );
+}
 
 function TaskTab({ onSuccess }: { onSuccess: () => void }) {
   const [title, setTitle] = React.useState("");
@@ -127,28 +135,11 @@ function TaskTab({ onSuccess }: { onSuccess: () => void }) {
         </div>
       </div>
 
-      {error && (
-        <p className="font-mono text-[11px] text-red-400">{error}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={loading || !title.trim()}
-        className={cn(
-          "mt-1 flex items-center justify-center gap-2 rounded px-4 py-2",
-          "bg-[#7c5cfc] font-mono text-xs text-white tracking-wide",
-          "hover:bg-[#6b4ef0] transition-colors",
-          "disabled:opacity-40 disabled:cursor-not-allowed"
-        )}
-      >
-        {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-        Save Task
-      </button>
+      {error && <p className="text-[11px]" style={{ color: "var(--red)" }}>{error}</p>}
+      <SaveButton loading={loading} disabled={loading || !title.trim()} label="Save Task" />
     </form>
   );
 }
-
-// ─── Opportunity Tab ─────────────────────────────────────────────────────────
 
 function OpportunityTab({ onSuccess }: { onSuccess: () => void }) {
   const [title, setTitle] = React.useState("");
@@ -235,28 +226,11 @@ function OpportunityTab({ onSuccess }: { onSuccess: () => void }) {
         </div>
       </div>
 
-      {error && (
-        <p className="font-mono text-[11px] text-red-400">{error}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={loading || !title.trim()}
-        className={cn(
-          "mt-1 flex items-center justify-center gap-2 rounded px-4 py-2",
-          "bg-[#7c5cfc] font-mono text-xs text-white tracking-wide",
-          "hover:bg-[#6b4ef0] transition-colors",
-          "disabled:opacity-40 disabled:cursor-not-allowed"
-        )}
-      >
-        {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-        Save Opportunity
-      </button>
+      {error && <p className="text-[11px]" style={{ color: "var(--red)" }}>{error}</p>}
+      <SaveButton loading={loading} disabled={loading || !title.trim()} label="Save Opportunity" />
     </form>
   );
 }
-
-// ─── Input Tab ───────────────────────────────────────────────────────────────
 
 function InputTab({ onSuccess }: { onSuccess: () => void }) {
   const [title, setTitle] = React.useState("");
@@ -275,7 +249,6 @@ function InputTab({ onSuccess }: { onSuccess: () => void }) {
     weekly_recap: "Weekly Recap",
   };
 
-  // Only expose the 4 types requested in the spec
   const allowedTypes: InputType[] = ["meeting", "note", "quick_idea", "day_update"];
 
   async function handleSubmit(e: React.FormEvent) {
@@ -340,28 +313,11 @@ function InputTab({ onSuccess }: { onSuccess: () => void }) {
         />
       </div>
 
-      {error && (
-        <p className="font-mono text-[11px] text-red-400">{error}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={loading}
-        className={cn(
-          "mt-1 flex items-center justify-center gap-2 rounded px-4 py-2",
-          "bg-[#7c5cfc] font-mono text-xs text-white tracking-wide",
-          "hover:bg-[#6b4ef0] transition-colors",
-          "disabled:opacity-40 disabled:cursor-not-allowed"
-        )}
-      >
-        {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-        Save Input
-      </button>
+      {error && <p className="text-[11px]" style={{ color: "var(--red)" }}>{error}</p>}
+      <SaveButton loading={loading} disabled={loading} label="Save Input" />
     </form>
   );
 }
-
-// ─── Note Tab ────────────────────────────────────────────────────────────────
 
 function NoteTab({ onSuccess }: { onSuccess: () => void }) {
   const [content, setContent] = React.useState("");
@@ -396,8 +352,8 @@ function NoteTab({ onSuccess }: { onSuccess: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4">
       <div>
-        <p className="font-mono text-[10px] text-[#4a4a4a] mb-2">
-          Title: <span className="text-[#6b6b6b]">{quickNoteTitle()}</span>
+        <p className="text-[11px] mb-2" style={{ color: "var(--text-muted)" }}>
+          Title: <span style={{ color: "var(--text-secondary)" }}>{quickNoteTitle()}</span>
         </p>
         <FieldLabel>Note *</FieldLabel>
         <Textarea
@@ -410,39 +366,20 @@ function NoteTab({ onSuccess }: { onSuccess: () => void }) {
         />
       </div>
 
-      {error && (
-        <p className="font-mono text-[11px] text-red-400">{error}</p>
-      )}
-
-      <button
-        type="submit"
-        disabled={loading || !content.trim()}
-        className={cn(
-          "mt-1 flex items-center justify-center gap-2 rounded px-4 py-2",
-          "bg-[#7c5cfc] font-mono text-xs text-white tracking-wide",
-          "hover:bg-[#6b4ef0] transition-colors",
-          "disabled:opacity-40 disabled:cursor-not-allowed"
-        )}
-      >
-        {loading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-        Save Note
-      </button>
+      {error && <p className="text-[11px]" style={{ color: "var(--red)" }}>{error}</p>}
+      <SaveButton loading={loading} disabled={loading || !content.trim()} label="Save Note" />
     </form>
   );
 }
 
-// ─── Success overlay ─────────────────────────────────────────────────────────
-
 function SuccessState() {
   return (
     <div className="flex flex-col items-center justify-center gap-2 py-10">
-      <CheckCircle className="h-8 w-8 text-[#7c5cfc]" />
-      <p className="font-mono text-xs text-[#c0c0c0]">Saved successfully</p>
+      <CheckCircle className="h-8 w-8" style={{ color: "var(--green)" }} />
+      <p className="text-[12px]" style={{ color: "var(--text-secondary)" }}>Saved successfully</p>
     </div>
   );
 }
-
-// ─── Main QuickCapture component ─────────────────────────────────────────────
 
 export function QuickCapture() {
   const {
@@ -454,22 +391,17 @@ export function QuickCapture() {
 
   const [success, setSuccess] = React.useState(false);
 
-  // Reset success state when modal opens/closes
   React.useEffect(() => {
     if (!quickCaptureOpen) {
-      // Small delay so the animation can play
       const t = setTimeout(() => setSuccess(false), 200);
       return () => clearTimeout(t);
     }
   }, [quickCaptureOpen]);
 
-  // Close on Escape (Dialog handles this natively, but kept explicit)
   React.useEffect(() => {
     if (!quickCaptureOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setQuickCaptureOpen(false);
-      }
+      if (e.key === "Escape") setQuickCaptureOpen(false);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -479,7 +411,6 @@ export function QuickCapture() {
     setSuccess(true);
     setTimeout(() => {
       setQuickCaptureOpen(false);
-      // Reload to reflect new data in the current page
       window.location.reload();
     }, 900);
   }
@@ -487,30 +418,37 @@ export function QuickCapture() {
   return (
     <Dialog.Root open={quickCaptureOpen} onOpenChange={setQuickCaptureOpen}>
       <Dialog.Portal>
-        {/* Backdrop */}
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm animate-in fade-in-0" />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 animate-in fade-in-0" />
 
-        {/* Floating modal — not full screen */}
         <Dialog.Content
           className={cn(
             "fixed left-1/2 top-1/2 z-50 w-full max-w-[480px]",
             "-translate-x-1/2 -translate-y-1/2",
-            "rounded-lg border border-[#2a2a2a] bg-[#111111]",
-            "shadow-2xl shadow-black/60",
-            "outline-none",
+            "rounded-lg outline-none",
             "animate-in fade-in-0 zoom-in-95"
           )}
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--border)",
+            boxShadow: "0 8px 32px oklch(0% 0 0 / 0.12)",
+          }}
           aria-label="Quick capture"
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#2a2a2a] px-4 py-3">
-            <span className="font-mono text-[11px] uppercase tracking-widest text-[#4a4a4a]">
+          <div
+            className="flex items-center justify-between px-4 py-3"
+            style={{ borderBottom: "1px solid var(--border)" }}
+          >
+            <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
               Quick Capture
             </span>
             <button
               type="button"
               onClick={() => setQuickCaptureOpen(false)}
-              className="rounded p-1 text-[#4a4a4a] hover:bg-[#1a1a1a] hover:text-[#f0f0f0] transition-colors"
+              className="rounded p-1 transition-colors"
+              style={{ color: "var(--text-muted)" }}
+              onMouseEnter={e => { e.currentTarget.style.background = "var(--bg)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
               aria-label="Close"
             >
               <X className="h-3.5 w-3.5" />
@@ -522,9 +460,7 @@ export function QuickCapture() {
           ) : (
             <Tabs
               value={quickCaptureTab}
-              onValueChange={(v) =>
-                setQuickCaptureTab(v as typeof quickCaptureTab)
-              }
+              onValueChange={(v) => setQuickCaptureTab(v as typeof quickCaptureTab)}
             >
               <TabsList className="px-4 pt-3">
                 <TabsTrigger value="task">Task</TabsTrigger>

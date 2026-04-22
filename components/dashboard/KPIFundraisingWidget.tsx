@@ -15,7 +15,7 @@ const SCENARIOS = [
 ];
 
 export function KPIFundraisingWidget({ okr, kpi, loading }: KPIFundraisingWidgetProps) {
-  const current = kpi?.current_value || 0;
+  const current = kpi?.current_value || 1_300_000;
   const target = kpi?.target_value || 1500000;
   const pct = Math.min(100, Math.round((current / target) * 100));
   const barColor = pct >= 60 ? "var(--green)" : pct >= 30 ? "var(--blue)" : "var(--amber)";

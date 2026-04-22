@@ -39,6 +39,15 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
       .eq("id", id);
   }
 
+  async function postpone(id: string) {
+    setDone((prev) => { const next = new Set(prev); next.add(id); return next; });
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+    await supabase
+      .from("tasks")
+      .update({ due_date: tomorrow, updated_at: new Date().toISOString() })
+      .eq("id", id);
+  }
+
   const grouped = tasks
     .filter((t) => !done.has(t.id))
     .reduce<Record<string, Task[]>>((acc, task) => {
@@ -114,16 +123,6 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
                       onMouseEnter={e => (e.currentTarget.style.background = "var(--bg)")}
                       onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
                     >
-                      <button
-                        onClick={() => markDone(task.id)}
-                        className="w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all"
-                        style={{ borderColor: "var(--border-strong)" }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--green)"; e.currentTarget.style.background = "var(--green-light)"; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border-strong)"; e.currentTarget.style.background = "transparent"; }}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: "var(--green)" }} />
-                      </button>
-
                       <span
                         className={cn("w-1.5 h-1.5 rounded-full shrink-0", PRIORITY_DOT[task.priority] || "bg-[var(--border-strong)]")}
                       />
@@ -135,7 +134,8 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
                         {task.title}
                       </span>
 
-                      <div className="flex items-center gap-1.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {/* Status badge — always visible */}
+                      <div className="flex items-center gap-1.5 shrink-0">
                         {overdue && (
                           <span className="text-[11px]" style={{ color: "var(--red)" }}>overdue</span>
                         )}
@@ -144,6 +144,30 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
                             {tag.label}
                           </span>
                         )}
+                      </div>
+
+                      {/* Done / Postpone — appear on hover */}
+                      <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => markDone(task.id)}
+                          title="Mark done"
+                          className="h-5 px-1.5 rounded text-[11px] font-medium transition-colors"
+                          style={{ color: "var(--green)", background: "var(--green-light)" }}
+                          onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
+                          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+                        >
+                          ✓
+                        </button>
+                        <button
+                          onClick={() => postpone(task.id)}
+                          title="Postpone to tomorrow"
+                          className="h-5 px-1.5 rounded text-[11px] font-medium transition-colors"
+                          style={{ color: "var(--text-muted)", background: "var(--border)" }}
+                          onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
+                          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+                        >
+                          →
+                        </button>
                       </div>
                     </div>
                   );

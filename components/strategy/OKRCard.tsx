@@ -30,11 +30,12 @@ export function OKRCard({ okr, isSelected, onClick, onEdit }: OKRCardProps) {
   return (
     <div
       className={cn(
-        "rounded border transition-colors cursor-pointer group",
+        "rounded-lg border transition-colors cursor-pointer group",
         isSelected
-          ? "bg-[#1a1a1a] border-[#7c5cfc]/50"
-          : "bg-[#111111] border-[#1e1e1e] hover:border-[#2a2a2a]"
+          ? "border-[var(--blue)]"
+          : "border-[var(--border)] hover:border-[var(--border-strong)]"
       )}
+      style={{ background: isSelected ? "var(--blue-light)" : "var(--surface)" }}
       onClick={onClick}
     >
       <div className="px-5 py-4">
@@ -42,14 +43,14 @@ export function OKRCard({ okr, isSelected, onClick, onEdit }: OKRCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <OKRStatusBadge status={okr.status} />
-              <span className="font-mono text-[10px] text-[#4a4a4a]">{okr.quarter}</span>
+              <span className="text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>{okr.quarter}</span>
               {okr.owner && (
-                <span className="font-mono text-[10px] text-[#4a4a4a]">· {okr.owner}</span>
+                <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>· {okr.owner}</span>
               )}
             </div>
-            <h3 className="text-sm font-medium text-[#f0f0f0] leading-snug">{okr.title}</h3>
+            <h3 className="text-[13px] font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>{okr.title}</h3>
             {okr.description && (
-              <p className="text-xs text-[#6b6b6b] mt-1 leading-relaxed line-clamp-2">
+              <p className="text-[12px] mt-1 leading-relaxed line-clamp-2" style={{ color: "var(--text-secondary)" }}>
                 {okr.description}
               </p>
             )}
@@ -66,19 +67,20 @@ export function OKRCard({ okr, isSelected, onClick, onEdit }: OKRCardProps) {
             </Button>
             <ChevronRight
               className={cn(
-                "w-4 h-4 text-[#4a4a4a] transition-transform",
-                isSelected && "rotate-90 text-[#7c5cfc]"
+                "w-4 h-4 transition-transform",
+                isSelected ? "rotate-90" : ""
               )}
+              style={{ color: isSelected ? "var(--blue)" : "var(--text-muted)" }}
             />
           </div>
         </div>
 
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="font-mono text-[10px] text-[#4a4a4a] uppercase tracking-wider">
+            <span className="text-[11px] font-medium uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
               Progress
             </span>
-            <span className="font-mono text-xs text-[#f0f0f0]">{okr.progress}%</span>
+            <span className="text-[12px] font-semibold tabular-nums" style={{ color: "var(--text-primary)" }}>{okr.progress}%</span>
           </div>
           <Progress
             value={okr.progress}
@@ -88,21 +90,21 @@ export function OKRCard({ okr, isSelected, onClick, onEdit }: OKRCardProps) {
         </div>
 
         {kpis.length > 0 && (
-          <div className="mt-4 border-t border-[#1e1e1e] pt-3 grid grid-cols-2 gap-3">
+          <div className="mt-4 pt-3 grid grid-cols-2 gap-3" style={{ borderTop: "1px solid var(--border)" }}>
             {kpis.slice(0, 4).map((kpi) => {
               const pct = kpi.target_value > 0
                 ? Math.min(100, Math.round((kpi.current_value / kpi.target_value) * 100))
                 : 0;
               return (
                 <div key={kpi.id}>
-                  <p className="font-mono text-[10px] text-[#4a4a4a] uppercase tracking-wider leading-none mb-1">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider leading-none mb-1" style={{ color: "var(--text-muted)" }}>
                     {kpi.title}
                   </p>
                   <div className="flex items-baseline gap-1">
-                    <span className="font-mono text-sm text-[#f0f0f0]">
+                    <span className="text-[13px] font-bold tabular-nums" style={{ color: "var(--text-primary)" }}>
                       {kpi.current_value.toLocaleString()}
                     </span>
-                    <span className="font-mono text-[10px] text-[#4a4a4a]">
+                    <span className="text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
                       / {kpi.target_value.toLocaleString()} {kpi.unit}
                     </span>
                   </div>
@@ -119,7 +121,7 @@ export function OKRCard({ okr, isSelected, onClick, onEdit }: OKRCardProps) {
 
         {okr.deadline && (
           <div className="mt-3 flex items-center gap-1">
-            <span className="font-mono text-[10px] text-[#4a4a4a]">
+            <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>
               Deadline: {formatDate(okr.deadline)}
             </span>
           </div>
