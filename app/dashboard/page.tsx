@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { HeroCard } from "@/components/dashboard/HeroCard";
-import { FocusModeWidget } from "@/components/dashboard/FocusModeWidget";
 import { OppBacklogWidget } from "@/components/dashboard/OppBacklogWidget";
+import { TasksOverviewWidget } from "@/components/dashboard/TasksOverviewWidget";
 import { MainTasksWidget } from "@/components/dashboard/MainTasksWidget";
 import { OKRSnapshotWidget } from "@/components/dashboard/OKRSnapshotWidget";
 import { KPIFundraisingWidget } from "@/components/dashboard/KPIFundraisingWidget";
@@ -94,17 +94,17 @@ export default function DashboardPage() {
           loading={loading}
         />
 
-        {/* MAIN GRID: Left | Tasks | Right */}
-        <div className="grid grid-cols-[220px_1fr_260px] gap-4">
+        {/* MAIN GRID: Left | Center | Right */}
+        <div className="grid grid-cols-[200px_1fr_260px] gap-4">
 
           {/* LEFT COLUMN */}
-          <div className="space-y-4">
-            <FocusModeWidget />
-            <OppBacklogWidget opps={opps} loading={loading} />
-          </div>
+          <OppBacklogWidget opps={opps} loading={loading} />
 
-          {/* CENTER: Main Tasks */}
-          <MainTasksWidget tasks={todayTasks} loading={loading} />
+          {/* CENTER: Overview chart + task list */}
+          <div className="space-y-4">
+            <TasksOverviewWidget tasks={tasks} loading={loading} />
+            <MainTasksWidget tasks={todayTasks} loading={loading} />
+          </div>
 
           {/* RIGHT COLUMN */}
           <div className="space-y-4">
