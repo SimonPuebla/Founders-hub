@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { TaskStatusBadge, PriorityIndicator } from "@/components/shared/StatusBadge";
-import { Button } from "@/components/ui/button";
 import { formatDate, isOverdue, isDueToday } from "@/lib/utils";
 import { X, Edit2, Calendar } from "lucide-react";
 import type { Task, TaskStatus } from "@/types";
@@ -11,6 +10,15 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 
 const TASK_STATUSES: TaskStatus[] = ["todo", "doing", "waiting", "blocked", "done", "delegated"];
+
+const STATUS_COLORS: Record<string, { active: string; idle: string }> = {
+  todo:      { active: "border-[var(--border-strong)] text-[var(--text-secondary)] bg-[var(--bg)]", idle: "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]" },
+  doing:     { active: "border-[var(--blue)] text-[var(--blue)] bg-[var(--blue-light)]",           idle: "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]" },
+  waiting:   { active: "border-[var(--amber)] text-[var(--amber)] bg-[var(--amber-light)]",        idle: "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]" },
+  blocked:   { active: "border-[var(--red)] text-[var(--red)] bg-[var(--red-light)]",             idle: "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]" },
+  done:      { active: "border-[var(--green)] text-[var(--green)] bg-[var(--green-light)]",        idle: "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]" },
+  delegated: { active: "border-[var(--purple)] text-[var(--purple)] bg-[var(--purple-light)]",    idle: "border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border-strong)]" },
+};
 
 interface TaskDetailPanelProps {
   task: Task;
@@ -42,25 +50,35 @@ export function TaskDetailPanel({ task, onClose, onEdit, onRefresh }: TaskDetail
   const dueToday = task.due_date && isDueToday(task.due_date);
 
   return (
-    <div className="fixed right-0 top-0 h-full w-[420px] bg-[#0f0f0f] border-l border-[#1e1e1e] flex flex-col z-30 animate-slide-in-right">
-      <div className="px-5 pt-5 pb-4 border-b border-[#1e1e1e] flex items-start justify-between gap-3">
+    <div
+      className="fixed right-0 top-0 h-full w-[400px] flex flex-col z-30 animate-slide-in-right"
+      style={{ background: "var(--surface)", borderLeft: "1px solid var(--border)", boxShadow: "-4px 0 24px oklch(0% 0 0 / 0.06)" }}
+    >
+      {/* Header */}
+      <div
+        className="px-5 pt-5 pb-4 flex items-start justify-between gap-3"
+        style={{ borderBottom: "1px solid var(--border)" }}
+      >
         <div className="flex-1 min-w-0 flex items-start gap-2">
-          <PriorityIndicator priority={task.priority} className="mt-1" />
+          <PriorityIndicator priority={task.priority} className="mt-0.5" />
           <div className="flex-1 min-w-0">
-            <h2 className="text-sm font-semibold text-[#f0f0f0] leading-snug">{task.title}</h2>
-            <div className="flex items-center gap-2 mt-1 flex-wrap">
+            <h2 className="text-[14px] font-semibold leading-snug" style={{ color: "var(--text-primary)" }}>
+              {task.title}
+            </h2>
+            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
               <TaskStatusBadge status={task.status} />
               {task.project && (
-                <span className="font-mono text-[10px] text-[#4a4a4a] bg-[#1e1e1e] px-1.5 py-0.5 rounded">
+                <span
+                  className="text-[11px] px-1.5 py-0.5 rounded"
+                  style={{ color: "var(--text-muted)", background: "var(--bg)", border: "1px solid var(--border)" }}
+                >
                   {task.project}
                 </span>
               )}
               {task.due_date && (
                 <span
-                  className={cn(
-                    "font-mono text-[10px]",
-                    overdue ? "text-[#ef4444]" : dueToday ? "text-[#f59e0b]" : "text-[#4a4a4a]"
-                  )}
+                  className="text-[11px]"
+                  style={{ color: overdue ? "var(--red)" : dueToday ? "var(--amber)" : "var(--text-muted)" }}
                 >
                   {formatDate(task.due_date)}
                 </span>
@@ -69,74 +87,87 @@ export function TaskDetailPanel({ task, onClose, onEdit, onRefresh }: TaskDetail
           </div>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <Button variant="ghost" size="icon-sm" onClick={onEdit}>
+          <button
+            onClick={onEdit}
+            className="p-1.5 rounded-md transition-colors"
+            style={{ color: "var(--text-muted)" }}
+            onMouseEnter={e => (e.currentTarget.style.background = "var(--bg)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+          >
             <Edit2 className="w-3.5 h-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon-sm" onClick={onClose}>
+          </button>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-md transition-colors"
+            style={{ color: "var(--text-muted)" }}
+            onMouseEnter={e => (e.currentTarget.style.background = "var(--bg)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+          >
             <X className="w-3.5 h-3.5" />
-          </Button>
+          </button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="px-5 py-4 border-b border-[#1e1e1e]">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-2">
+        {/* Status picker */}
+        <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+          <span
+            className="text-[11px] uppercase tracking-wider font-medium block mb-2.5"
+            style={{ color: "var(--text-muted)" }}
+          >
             Status
           </span>
           <div className="flex flex-wrap gap-1.5">
-            {TASK_STATUSES.map((s) => (
-              <button
-                key={s}
-                onClick={() => updateStatus(s)}
-                disabled={updating}
-                className={cn(
-                  "font-mono text-[10px] uppercase tracking-wider px-2 py-1 rounded border transition-colors",
-                  task.status === s
-                    ? "border-[#7c5cfc] text-[#7c5cfc] bg-[#7c5cfc]/10"
-                    : "border-[#1e1e1e] text-[#4a4a4a] hover:border-[#2a2a2a] hover:text-[#6b6b6b]"
-                )}
-              >
-                {s}
-              </button>
-            ))}
+            {TASK_STATUSES.map((s) => {
+              const colors = STATUS_COLORS[s];
+              return (
+                <button
+                  key={s}
+                  onClick={() => updateStatus(s)}
+                  disabled={updating}
+                  className={cn(
+                    "text-[11px] font-medium px-2.5 py-1 rounded-md border transition-colors capitalize",
+                    task.status === s ? colors.active : colors.idle
+                  )}
+                >
+                  {s}
+                </button>
+              );
+            })}
           </div>
         </div>
 
+        {/* Description */}
         {task.description && (
-          <div className="px-5 py-4 border-b border-[#1e1e1e]">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-2">
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+            <span className="text-[11px] uppercase tracking-wider font-medium block mb-2" style={{ color: "var(--text-muted)" }}>
               Description
             </span>
-            <p className="text-xs text-[#6b6b6b] leading-relaxed">{task.description}</p>
+            <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              {task.description}
+            </p>
           </div>
         )}
 
-        <div className="px-5 py-4 border-b border-[#1e1e1e]">
+        {/* Meta grid */}
+        <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-1">
-                Priority
-              </span>
-              <span className="text-xs text-[#f0f0f0] capitalize">{task.priority}</span>
+              <span className="text-[11px] uppercase tracking-wider font-medium block mb-1" style={{ color: "var(--text-muted)" }}>Priority</span>
+              <span className="text-[13px] capitalize" style={{ color: "var(--text-primary)" }}>{task.priority}</span>
             </div>
             {task.owner && (
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-1">
-                  Owner
-                </span>
-                <span className="text-xs text-[#f0f0f0]">{task.owner}</span>
+                <span className="text-[11px] uppercase tracking-wider font-medium block mb-1" style={{ color: "var(--text-muted)" }}>Owner</span>
+                <span className="text-[13px]" style={{ color: "var(--text-primary)" }}>{task.owner}</span>
               </div>
             )}
             {task.due_date && (
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-1">
-                  Due Date
-                </span>
+                <span className="text-[11px] uppercase tracking-wider font-medium block mb-1" style={{ color: "var(--text-muted)" }}>Due Date</span>
                 <span
-                  className={cn(
-                    "text-xs",
-                    overdue ? "text-[#ef4444]" : dueToday ? "text-[#f59e0b]" : "text-[#f0f0f0]"
-                  )}
+                  className="text-[13px]"
+                  style={{ color: overdue ? "var(--red)" : dueToday ? "var(--amber)" : "var(--text-primary)" }}
                 >
                   {formatDate(task.due_date)}
                 </span>
@@ -144,41 +175,40 @@ export function TaskDetailPanel({ task, onClose, onEdit, onRefresh }: TaskDetail
             )}
             {task.progress > 0 && (
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-1">
-                  Progress
-                </span>
-                <span className="text-xs text-[#f0f0f0]">{task.progress}%</span>
+                <span className="text-[11px] uppercase tracking-wider font-medium block mb-1" style={{ color: "var(--text-muted)" }}>Progress</span>
+                <span className="text-[13px] tabular-nums" style={{ color: "var(--text-primary)" }}>{task.progress}%</span>
               </div>
             )}
           </div>
         </div>
 
+        {/* OKR */}
         {task.okr && (
-          <div className="px-5 py-4 border-b border-[#1e1e1e]">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-2">
-              OKR
-            </span>
-            <span className="text-xs text-[#7c5cfc]">{task.okr.title}</span>
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+            <span className="text-[11px] uppercase tracking-wider font-medium block mb-1.5" style={{ color: "var(--text-muted)" }}>OKR</span>
+            <span className="text-[13px]" style={{ color: "var(--blue)" }}>{task.okr.title}</span>
           </div>
         )}
 
+        {/* Context */}
         {task.context_note && (
-          <div className="px-5 py-4 border-b border-[#1e1e1e]">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-2">
-              Context
-            </span>
-            <p className="text-xs text-[#6b6b6b] leading-relaxed">{task.context_note}</p>
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+            <span className="text-[11px] uppercase tracking-wider font-medium block mb-2" style={{ color: "var(--text-muted)" }}>Context</span>
+            <p className="text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>{task.context_note}</p>
           </div>
         )}
 
+        {/* People */}
         {task.people && task.people.length > 0 && (
-          <div className="px-5 py-4 border-b border-[#1e1e1e]">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-[#4a4a4a] block mb-2">
-              People
-            </span>
-            <div className="flex flex-wrap gap-1">
+          <div className="px-5 py-4" style={{ borderBottom: "1px solid var(--border)" }}>
+            <span className="text-[11px] uppercase tracking-wider font-medium block mb-2" style={{ color: "var(--text-muted)" }}>People</span>
+            <div className="flex flex-wrap gap-1.5">
               {task.people.map((p) => (
-                <span key={p} className="font-mono text-[10px] bg-[#1e1e1e] text-[#6b6b6b] px-2 py-1 rounded">
+                <span
+                  key={p}
+                  className="text-[12px] px-2 py-0.5 rounded-md"
+                  style={{ color: "var(--text-secondary)", background: "var(--bg)", border: "1px solid var(--border)" }}
+                >
                   {p}
                 </span>
               ))}
@@ -186,16 +216,18 @@ export function TaskDetailPanel({ task, onClose, onEdit, onRefresh }: TaskDetail
           </div>
         )}
 
+        {/* Calendar action */}
         <div className="px-5 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 w-full justify-start"
+          <button
             onClick={addToCalendar}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] transition-colors"
+            style={{ color: "var(--text-secondary)", border: "1px solid var(--border)" }}
+            onMouseEnter={e => (e.currentTarget.style.background = "var(--bg)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
           >
             <Calendar className="w-3.5 h-3.5" />
             Add to Calendar
-          </Button>
+          </button>
         </div>
       </div>
     </div>

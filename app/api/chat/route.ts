@@ -260,7 +260,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "glm-4-flash",
+        model: "glm-4-air",
         messages,
         tools: TOOLS,
         tool_choice: "auto",

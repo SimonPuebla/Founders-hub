@@ -48,6 +48,13 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
       .eq("id", id);
   }
 
+  async function updateStatus(id: string, status: string) {
+    await supabase
+      .from("tasks")
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq("id", id);
+  }
+
   const grouped = tasks
     .filter((t) => !done.has(t.id))
     .reduce<Record<string, Task[]>>((acc, task) => {
@@ -134,8 +141,8 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
                         {task.title}
                       </span>
 
-                      {/* Status badge — always visible */}
-                      <div className="flex items-center gap-1.5 shrink-0">
+                      {/* Status badge — hidden on hover */}
+                      <div className="flex items-center gap-1.5 shrink-0 group-hover:hidden">
                         {overdue && (
                           <span className="text-[11px]" style={{ color: "var(--red)" }}>overdue</span>
                         )}
@@ -146,25 +153,32 @@ export function MainTasksWidget({ tasks, loading }: MainTasksWidgetProps) {
                         )}
                       </div>
 
-                      {/* Done / Postpone — appear on hover */}
-                      <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {/* Status select + Done / Postpone — appear on hover */}
+                      <div className="hidden group-hover:flex items-center gap-1 shrink-0">
+                        <select
+                          value={task.status}
+                          onChange={(e) => { e.stopPropagation(); updateStatus(task.id, e.target.value); }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[11px] rounded px-1.5 h-5 cursor-pointer"
+                          style={{ color: "var(--text-secondary)", background: "var(--bg)", border: "1px solid var(--border)", outline: "none" }}
+                        >
+                          {["todo", "doing", "waiting", "blocked", "delegated", "done"].map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </select>
                         <button
                           onClick={() => markDone(task.id)}
                           title="Mark done"
-                          className="h-5 px-1.5 rounded text-[11px] font-medium transition-colors"
+                          className="h-5 px-1.5 rounded text-[11px] font-medium"
                           style={{ color: "var(--green)", background: "var(--green-light)" }}
-                          onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
-                          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
                         >
                           ✓
                         </button>
                         <button
                           onClick={() => postpone(task.id)}
                           title="Postpone to tomorrow"
-                          className="h-5 px-1.5 rounded text-[11px] font-medium transition-colors"
+                          className="h-5 px-1.5 rounded text-[11px] font-medium"
                           style={{ color: "var(--text-muted)", background: "var(--border)" }}
-                          onMouseEnter={e => (e.currentTarget.style.opacity = "0.75")}
-                          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
                         >
                           →
                         </button>
