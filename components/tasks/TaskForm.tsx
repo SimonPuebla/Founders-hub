@@ -35,8 +35,8 @@ export function TaskForm({ task, defaultOKRId, onClose }: TaskFormProps) {
   const [description, setDescription] = useState(task?.description || "");
   const [status, setStatus] = useState<TaskStatus>(task?.status || "todo");
   const [priority, setPriority] = useState<TaskPriority>(task?.priority || "medium");
-  const [project, setProject] = useState(task?.project || "");
-  const [okrId, setOkrId] = useState(task?.okr_id || defaultOKRId || "");
+  const [project, setProject] = useState(task?.project || "none");
+  const [okrId, setOkrId] = useState(task?.okr_id || defaultOKRId || "none");
   const [owner, setOwner] = useState(task?.owner || "Simo");
   const [dueDate, setDueDate] = useState(task?.due_date || "");
   const [contextNote, setContextNote] = useState(task?.context_note || "");
@@ -61,8 +61,8 @@ export function TaskForm({ task, defaultOKRId, onClose }: TaskFormProps) {
       status,
       priority,
       progress: task?.progress || 0,
-      project: project || null,
-      okr_id: okrId || null,
+      project: project === "none" ? null : project || null,
+      okr_id: okrId === "none" ? null : okrId || null,
       owner: owner.trim() || null,
       due_date: dueDate || null,
       context_note: contextNote.trim() || null,
@@ -141,7 +141,7 @@ export function TaskForm({ task, defaultOKRId, onClose }: TaskFormProps) {
                   <SelectValue placeholder="Select project..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No project</SelectItem>
+                  <SelectItem value="none">No project</SelectItem>
                   {SEED_PROJECTS.map((p) => (
                     <SelectItem key={p} value={p}>{p}</SelectItem>
                   ))}
@@ -155,7 +155,7 @@ export function TaskForm({ task, defaultOKRId, onClose }: TaskFormProps) {
                   <SelectValue placeholder="Link to OKR..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No OKR</SelectItem>
+                  <SelectItem value="none">No OKR</SelectItem>
                   {okrs.map((o) => (
                     <SelectItem key={o.id} value={o.id}>{o.title}</SelectItem>
                   ))}
