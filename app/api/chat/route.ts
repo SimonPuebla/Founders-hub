@@ -193,15 +193,17 @@ async function buildContext(supabase: any): Promise<string> {
 
   const today = new Date().toISOString().split("T")[0];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const taskLines = (tasks ?? [])
-    .map((t) => {
+    .map((t: any) => {
       const due = t.due_date ? ` | due: ${t.due_date}${t.due_date < today ? " ⚠ overdue" : ""}` : "";
       return `  - [${t.status}][${t.priority}] ${t.title} (ID: ${t.id}, project: ${t.project ?? "none"}${due})`;
     })
     .join("\n");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const okrLines = (okrs ?? [])
-    .map((o) => `  - [${o.status}] ${o.title} — ${o.progress}%`)
+    .map((o: any) => `  - [${o.status}] ${o.title} — ${o.progress}%`)
     .join("\n");
 
   return `You are Simo's AI assistant inside Andén Founders Hub, his personal founder OS.
