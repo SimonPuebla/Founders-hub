@@ -100,10 +100,11 @@ const TOOLS = [
 
 type Action = { label: string; detail?: string };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function executeTool(
   name: string,
   args: Record<string, unknown>,
-  supabase: ReturnType<typeof createClient>
+  supabase: any
 ): Promise<{ result: string; action: Action }> {
   const now = new Date().toISOString();
 
@@ -174,7 +175,8 @@ async function executeTool(
 
 // ─── Build system prompt from live data ──────────────────────────────────────
 
-async function buildContext(supabase: ReturnType<typeof createClient>): Promise<string> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function buildContext(supabase: any): Promise<string> {
   const [{ data: tasks }, { data: okrs }] = await Promise.all([
     supabase
       .from("tasks")
