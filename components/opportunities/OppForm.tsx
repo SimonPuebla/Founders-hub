@@ -37,7 +37,7 @@ export function OppForm({ opp, onClose }: OppFormProps) {
   const [entity, setEntity] = useState(opp?.entity || "");
   const [urgency, setUrgency] = useState<OpportunityUrgency>(opp?.urgency || "this_quarter");
   const [status, setStatus] = useState<OpportunityStatus>(opp?.status || "captured");
-  const [okrId, setOkrId] = useState(opp?.okr_id || "");
+  const [okrId, setOkrId] = useState(opp?.okr_id || "none");
   const [owner, setOwner] = useState(opp?.owner || "Simo");
   const [notes, setNotes] = useState(opp?.notes || "");
   const [potentialValue, setPotentialValue] = useState(opp?.potential_value || "");
@@ -64,7 +64,7 @@ export function OppForm({ opp, onClose }: OppFormProps) {
       entity: entity.trim() || null,
       urgency,
       status,
-      okr_id: okrId || null,
+      okr_id: okrId === "none" ? null : okrId || null,
       owner: owner.trim() || null,
       notes: notes.trim() || null,
       potential_value: potentialValue.trim() || null,
@@ -168,7 +168,7 @@ export function OppForm({ opp, onClose }: OppFormProps) {
                   <SelectValue placeholder="Link to OKR..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No OKR</SelectItem>
+                  <SelectItem value="none">No OKR</SelectItem>
                   {okrs.map((o) => (
                     <SelectItem key={o.id} value={o.id}>{o.title}</SelectItem>
                   ))}
